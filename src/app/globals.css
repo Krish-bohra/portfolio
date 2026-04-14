@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+
+:root {
+  --background: #121212;
+  --foreground: #ffffff;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ─── Ripple click effect ──────────────────────────────── */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(30);
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple 0.65s ease-out forwards;
+}
+
+/* ─── Shimmer border sweep ─────────────────────────────── */
+@keyframes shimmer-border {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.shimmer-border {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.25) 40%,
+    rgba(100,160,255,0.3) 60%,
+    rgba(255,255,255,0) 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer-border 2s linear infinite;
+}
+
+/* ─── Letter spacing entrance ──────────────────────────── */
+@keyframes letter-expand {
+  from { letter-spacing: -0.05em; opacity: 0; }
+  to   { letter-spacing: 0.45em;  opacity: 1; }
+}
+
+.animate-letter-expand {
+  animation: letter-expand 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ─── Breathing pulse for canvas ───────────────────────── */
+@keyframes breathe {
+  0%, 100% { transform: scale(1);    }
+  50%       { transform: scale(1.05); }
+}
+
+.animate-breathe {
+  animation: breathe 6s ease-in-out infinite;
+}
+
+/* ─── Gradient text glow ───────────────────────────────── */
+.glow-blue {
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-image: linear-gradient(90deg, #93c5fd, #3b82f6);
+  filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.7));
+}
+
+/* ─── Glassmorphism depth helpers ──────────────────────── */
+.glass-deep  { backdrop-filter: blur(30px); background: rgba(14, 22, 50, 0.45); }
+.glass-light { backdrop-filter: blur(20px); background: rgba(14, 22, 50, 0.30); }
