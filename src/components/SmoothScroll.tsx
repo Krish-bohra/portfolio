@@ -15,16 +15,22 @@ export default function SmoothScroll({
   useEffect(() => {
     const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
+    if (isTouch) {
+      // On mobile, just provide a very basic setup or nothing
+      lenisRef.current = null;
+      return;
+    }
+
     // 1. Initialize Lenis with premium settings
     const lenis = new Lenis({
-      duration: isTouch ? 1.0 : 1.5,
+      duration: 1.5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: isTouch ? 1.5 : 2.0,
-      lerp: isTouch ? 0.08 : 0.1, 
+      touchMultiplier: 2.0,
+      lerp: 0.1, 
       infinite: false,
     });
 
@@ -35,7 +41,7 @@ export default function SmoothScroll({
 
     // 3. Hook into GSAP's ticker for perfectly timed frames
     const updateRaf = (time: number) => {
-      lenis.raf(time * 1000);
+      if (lenisRef.current) lenisRef.current.raf(time * 1000);
     };
     gsap.ticker.add(updateRaf);
 

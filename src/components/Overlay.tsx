@@ -19,7 +19,7 @@ function TiltCard({ children, className, style }: { children: React.ReactNode; c
   const spotBg = useMotionTemplate`radial-gradient(circle at ${spotX} ${spotY}, rgba(255,255,255,0.06) 0%, transparent 60%)`;
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
+    if (!ref.current || (typeof window !== 'undefined' && window.innerWidth < 768)) return;
     const rect = ref.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -158,9 +158,9 @@ export default function Overlay() {
 
   return (
     <>
-      {/* ── Noise Texture Overlay ───────────────────────── */}
+      {/* ── Noise Texture Overlay (Disabled on mobile for performance) ── */}
       <div
-        className="pointer-events-none fixed inset-0 z-[5] opacity-[0.035]"
+        className="pointer-events-none fixed inset-0 z-[5] opacity-[0.035] hidden md:block"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           backgroundRepeat: "repeat",
@@ -175,7 +175,7 @@ export default function Overlay() {
         ══════════════════════════════════════════════════════ */}
         <motion.div
           style={{ opacity: opacity1, y: y1, filter: blur1 }}
-          className="sticky top-0 flex h-screen w-full flex-col items-center justify-center px-4 sm:px-6"
+          className="sticky top-0 flex min-h-[100dvh] w-full flex-col items-center justify-center px-4 sm:px-6"
         >
           <div className="absolute inset-0 bg-gradient-to-b from-[#121212]/80 via-transparent to-transparent pointer-events-none" />
 
@@ -204,7 +204,7 @@ export default function Overlay() {
               initial={{ opacity: 0, y: 50, filter: "blur(12px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="text-6xl sm:text-7xl font-black tracking-tighter text-white md:text-9xl lg:text-[12rem] leading-[0.82] select-none"
+              className="text-5xl sm:text-7xl font-black tracking-tighter text-white md:text-9xl lg:text-[12rem] leading-[0.85] select-none break-words"
             >
               KRISH<br />BOHRA<span className="text-blue-500">.</span>
             </motion.h1>
@@ -273,7 +273,7 @@ export default function Overlay() {
         ══════════════════════════════════════════════════════ */}
         <motion.div
           style={{ opacity: opacity2, y: y2, filter: blur2, scale: scaleCards }}
-          className="sticky top-0 flex flex-col lg:flex-row h-screen w-full items-center justify-center lg:justify-between px-4 sm:px-12 md:px-24 gap-4 lg:gap-8 overflow-hidden"
+          className="sticky top-0 flex flex-col lg:flex-row min-h-[100dvh] w-full items-center justify-center lg:justify-between px-4 sm:px-12 md:px-24 gap-4 lg:gap-8 overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/20 to-transparent pointer-events-none" />
 
@@ -365,7 +365,7 @@ export default function Overlay() {
         ══════════════════════════════════════════════════════ */}
         <motion.div
           style={{ opacity: opacity3, y: y3, filter: blur3 }}
-          className="sticky top-0 flex h-screen w-full items-center justify-center lg:justify-end px-4 sm:px-[10vw]"
+          className="sticky top-0 flex min-h-[100dvh] w-full items-center justify-center lg:justify-end px-4 sm:px-[10vw]"
         >
           <div className="absolute inset-0 bg-gradient-to-l from-black/65 via-transparent to-transparent pointer-events-none" />
 

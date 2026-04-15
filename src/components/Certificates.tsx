@@ -127,7 +127,7 @@ export default function Certificates() {
     <>
       <section
         ref={containerRef}
-        className="relative h-screen w-full bg-[#0a0a0a] overflow-hidden"
+        className="relative min-h-[100dvh] w-full bg-[#0a0a0a] overflow-hidden"
       >
         {/* Subtle Grid / Parallax Background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />

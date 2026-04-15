@@ -101,9 +101,10 @@ export default function ScrollyCanvas() {
   useEffect(() => {
     const handleResize = () => {
       if (canvasRef.current) {
-        // Set display size
-        canvasRef.current.width  = window.innerWidth * (window.devicePixelRatio || 1);
-        canvasRef.current.height = window.innerHeight * (window.devicePixelRatio || 1);
+        // Set display size - Cap pixel ratio on mobile to 1.5 for performance
+        const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2.5);
+        canvasRef.current.width  = window.innerWidth * dpr;
+        canvasRef.current.height = window.innerHeight * dpr;
         
         const currentFrame = Math.round(frameIndex.get());
         const imgToDraw = images[currentFrame] || images[0];
@@ -164,7 +165,9 @@ export default function ScrollyCanvas() {
           ref={canvasRef}
           style={{ 
             scale,
-            filter: "contrast(1.05) brightness(0.95)"
+            filter: typeof window !== 'undefined' && window.innerWidth < 768 
+              ? "none" 
+              : "contrast(1.05) brightness(0.95)"
           }}
           className="h-full w-full pointer-events-none"
         />

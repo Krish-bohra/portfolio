@@ -48,7 +48,7 @@ function ProjectCard({
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!ref.current) return;
+      if (!ref.current || (typeof window !== 'undefined' && window.innerWidth < 768)) return;
       const rect = ref.current.getBoundingClientRect();
       mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
       mouseY.set((e.clientY - rect.top) / rect.height - 0.5);

@@ -25,6 +25,9 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  position: relative;
+  width: 100%;
+  overscroll-behavior-y: none;
 }
 
 html.lenis,
@@ -114,3 +117,15 @@ html.lenis body {
 /* ─── Glassmorphism depth helpers ──────────────────────── */
 .glass-deep  { backdrop-filter: blur(30px); background: rgba(14, 22, 50, 0.45); }
 .glass-light { backdrop-filter: blur(20px); background: rgba(14, 22, 50, 0.30); }
+
+/* Mobile Performance Optimizations */
+@media (max-width: 768px) {
+  .glass-deep, .glass-light, .backdrop-blur-md, .backdrop-blur-xl {
+    backdrop-filter: blur(12px) !important;
+    background: rgba(14, 22, 50, 0.75) !important;
+  }
+  
+  .animate-ripple, .animate-breathe, .shimmer-border {
+    animation-duration: 4s !important; /* Slow down or disable heavy animations */
+  }
+}
