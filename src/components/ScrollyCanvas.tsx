@@ -101,8 +101,9 @@ export default function ScrollyCanvas() {
   useEffect(() => {
     const handleResize = () => {
       if (canvasRef.current) {
+        const isMobileScreen = window.innerWidth < 768;
         // Set display size - Cap pixel ratio on mobile to 1.5 for performance
-        const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2.5);
+        const dpr = Math.min(window.devicePixelRatio || 1, isMobileScreen ? 1.5 : 2.5);
         canvasRef.current.width  = window.innerWidth * dpr;
         canvasRef.current.height = window.innerHeight * dpr;
         
