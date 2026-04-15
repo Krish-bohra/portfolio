@@ -144,7 +144,7 @@ export default function Certificates() {
               ref={(el) => {
                 cardsRef.current[index] = el;
               }}
-              className="absolute flex w-[90vw] max-w-4xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl pointer-events-auto md:h-[60vh] md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] [transform-style:preserve-3d]"
+              className="absolute flex w-[90vw] max-w-4xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md pointer-events-auto md:h-[60vh] md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] [transform-style:preserve-3d]"
             >
               {/* Background Glow */}
               <div

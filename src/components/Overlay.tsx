@@ -124,13 +124,13 @@ export default function Overlay() {
   const opacity2 = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], [0, 1, 1, 0]);
   const blur2    = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
 
-  const opacity3 = useTransform(scrollYProgress, [0.65, 0.75, 0.9, 1], [0, 1, 1, 1]);
-  const blur3    = useTransform(scrollYProgress, [0.65, 0.75, 0.9, 1], ["blur(8px)", "blur(0px)", "blur(0px)", "blur(0px)"]);
+  const opacity3 = useTransform(scrollYProgress, [0.65, 0.75, 1], [0, 1, 1]);
+  const blur3    = useTransform(scrollYProgress, [0.65, 0.75, 1], ["blur(8px)", "blur(0px)", "blur(0px)"]);
 
   // Y parallax (Smoothed)
   const y1 = useTransform(scrollYProgress, [0, 0.25],  [0, -80]);
   const y2 = useTransform(scrollYProgress, [0.22, 0.62], [80, -80]);
-  const y3 = useTransform(scrollYProgress, [0.65, 1], [80, 0]);
+  const y3 = useTransform(scrollYProgress, [0.65, 0.9], [80, 0]);
 
   // Scroll‑storytelling: staggered opacity for section 2 elements (More overlap)
   const opacityBio  = useTransform(scrollYProgress, [0.22, 0.35, 0.5, 0.62], [0, 1, 1, 0]);
@@ -139,7 +139,7 @@ export default function Overlay() {
   // Cinematic X slides
   const xLeft          = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], [-80, 0, 0, -80]);
   const xRight         = useTransform(scrollYProgress, [0.25, 0.38, 0.52, 0.62], [80, 0, 0, 80]);
-  const xRightSection3 = useTransform(scrollYProgress, [0.65, 0.75, 0.9, 1],   [80, 0, 0, 0]);
+  const xRightSection3 = useTransform(scrollYProgress, [0.65, 0.75, 1],   [80, 0, 0]);
 
   // Hero parallax layers
   const heroTextY     = useTransform(scrollYProgress, [0, 0.25], [0, -40]);

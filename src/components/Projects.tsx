@@ -84,7 +84,7 @@ function ProjectCard({
           onMouseLeave={handleMouseLeave}
           onClick={onClick}
           className="group relative cursor-pointer overflow-hidden rounded-3xl border border-white/8
-                     bg-[rgba(14,22,50,0.4)] backdrop-blur-[20px]
+                     bg-[rgba(14,22,50,0.4)] backdrop-blur-[12px]
                      shadow-[0_0_0_1px_rgba(255,255,255,0.04),0_20px_60px_rgba(0,0,0,0.4)]
                      transition-shadow duration-500
                      hover:shadow-[0_0_0_1px_rgba(255,255,255,0.10),0_30px_80px_rgba(0,0,0,0.5)]"
