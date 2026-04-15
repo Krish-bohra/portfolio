@@ -117,39 +117,39 @@ export default function Overlay() {
     }
   };
 
-  // Opacity & Blur maps
-  const opacity1 = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
-  const blur1    = useTransform(scrollYProgress, [0, 0.1, 0.2], ["blur(0px)", "blur(0px)", "blur(20px)"]);
+  // Opacity & Blur maps (Widened for better dwell time)
+  const opacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 1, 0]);
+  const blur1    = useTransform(scrollYProgress, [0, 0.15, 0.25], ["blur(0px)", "blur(0px)", "blur(8px)"]);
 
-  const opacity2 = useTransform(scrollYProgress, [0.25, 0.35, 0.45, 0.55], [0, 1, 1, 0]);
-  const blur2    = useTransform(scrollYProgress, [0.25, 0.35, 0.45, 0.55], ["blur(12px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
+  const opacity2 = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], [0, 1, 1, 0]);
+  const blur2    = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
 
-  const opacity3 = useTransform(scrollYProgress, [0.6, 0.7, 0.85, 0.95], [0, 1, 1, 0]);
-  const blur3    = useTransform(scrollYProgress, [0.6, 0.7, 0.85, 0.95], ["blur(12px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
+  const opacity3 = useTransform(scrollYProgress, [0.65, 0.75, 0.9, 1], [0, 1, 1, 1]);
+  const blur3    = useTransform(scrollYProgress, [0.65, 0.75, 0.9, 1], ["blur(8px)", "blur(0px)", "blur(0px)", "blur(0px)"]);
 
-  // Y parallax
-  const y1 = useTransform(scrollYProgress, [0, 0.2],  [0, -100]);
-  const y2 = useTransform(scrollYProgress, [0.2, 0.5], [100, -100]);
-  const y3 = useTransform(scrollYProgress, [0.6, 0.9], [100, -100]);
+  // Y parallax (Smoothed)
+  const y1 = useTransform(scrollYProgress, [0, 0.25],  [0, -80]);
+  const y2 = useTransform(scrollYProgress, [0.22, 0.62], [80, -80]);
+  const y3 = useTransform(scrollYProgress, [0.65, 1], [80, 0]);
 
-  // Scroll‑storytelling: staggered opacity for section 2 elements
-  const opacityBio  = useTransform(scrollYProgress, [0.25, 0.33, 0.47, 0.55], [0, 1, 1, 0]);
-  const opacityEdu  = useTransform(scrollYProgress, [0.29, 0.37, 0.47, 0.55], [0, 1, 1, 0]);
+  // Scroll‑storytelling: staggered opacity for section 2 elements (More overlap)
+  const opacityBio  = useTransform(scrollYProgress, [0.22, 0.35, 0.5, 0.62], [0, 1, 1, 0]);
+  const opacityEdu  = useTransform(scrollYProgress, [0.25, 0.38, 0.5, 0.62], [0, 1, 1, 0]);
 
   // Cinematic X slides
-  const xLeft          = useTransform(scrollYProgress, [0.25, 0.35, 0.45, 0.55], [-120, 0, 0, -120]);
-  const xRight         = useTransform(scrollYProgress, [0.29, 0.37, 0.47, 0.55], [120, 0, 0, 120]);
-  const xRightSection3 = useTransform(scrollYProgress, [0.6, 0.7, 0.85, 0.95],   [120, 0, 0, 120]);
+  const xLeft          = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], [-80, 0, 0, -80]);
+  const xRight         = useTransform(scrollYProgress, [0.25, 0.38, 0.52, 0.62], [80, 0, 0, 80]);
+  const xRightSection3 = useTransform(scrollYProgress, [0.65, 0.75, 0.9, 1],   [80, 0, 0, 0]);
 
   // Hero parallax layers
-  const heroTextY     = useTransform(scrollYProgress, [0, 0.2], [0, -60]);
-  const heroBadgeY    = useTransform(scrollYProgress, [0, 0.2], [0, -160]);
-  const heroSubtitleY = useTransform(scrollYProgress, [0, 0.2], [0, 60]);
-  const heroRotate    = useTransform(scrollYProgress, [0, 0.2], [0, 1.5]);
+  const heroTextY     = useTransform(scrollYProgress, [0, 0.25], [0, -40]);
+  const heroBadgeY    = useTransform(scrollYProgress, [0, 0.25], [0, -120]);
+  const heroSubtitleY = useTransform(scrollYProgress, [0, 0.25], [0, 40]);
+  const heroRotate    = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
 
   // Spring scale for whole section 2
-  const scaleBase  = useTransform(scrollYProgress, [0.25, 0.35, 0.45, 0.55], [0.85, 1, 1, 0.85]);
-  const scaleCards = useSpring(scaleBase, { stiffness: 120, damping: 22 });
+  const scaleBase  = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], [0.9, 1, 1, 0.9]);
+  const scaleCards = useSpring(scaleBase, { stiffness: 100, damping: 25 });
 
   // Breathing animation for the canvas zoom (referenced in ScrollyCanvas, kept here for reference)
   const canvasScaleY = useTransform(scrollYProgress, [0, 1], [1, 1.1]);

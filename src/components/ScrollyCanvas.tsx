@@ -7,48 +7,75 @@ export default function ScrollyCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { scrollYProgress } = useScroll();
   const [images, setImages] = useState<HTMLImageElement[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFirstFrameLoaded, setIsFirstFrameLoaded] = useState(false);
   const frameCount = 120;
 
   // ─── Scroll → Frame index ──────────────────────────────
   const frameIndex = useTransform(scrollYProgress, [0, 1], [0, frameCount - 1]);
 
   // ─── Scroll-linked zoom (1→1.12 over full scroll) ─────
-  const scaleRaw = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const scaleRaw = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
   const scale = useSpring(scaleRaw, { stiffness: 60, damping: 20 });
 
   // ─── Gradient overlay opacity shifts by scroll ─────────
   const overlayOpacity = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [0.18, 0.35, 0.25, 0.4]);
 
-  // ─── 1. Preload all frames ─────────────────────────────
+  // ─── 1. Load First Frame Fast + Preload Rest ───────────
   useEffect(() => {
+    let isMounted = true;
     const loadedImages: HTMLImageElement[] = [];
-    let loadedCount = 0;
+    
+    // Function to load a single image
+    const loadImage = (index: number): Promise<HTMLImageElement> => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const paddedIndex = String(index).padStart(3, "0");
+        img.src = `/sequence/ezgif-frame-${paddedIndex}.png`;
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+      });
+    };
 
-    for (let i = 1; i <= frameCount; i++) {
-      const img = new Image();
-      const paddedIndex = String(i).padStart(3, "0");
-      img.src = `/sequence/ezgif-frame-${paddedIndex}.png`;
+    // 1. Load the first frame immediately
+    loadImage(1).then((firstImg) => {
+      if (!isMounted) return;
+      setIsFirstFrameLoaded(true);
+      
+      // Initial draw
+      if (canvasRef.current) {
+        const ctx = canvasRef.current.getContext("2d");
+        if (ctx) drawImageCover(ctx, firstImg, canvasRef.current);
+      }
 
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === frameCount) {
-          setImages(loadedImages);
-          if (canvasRef.current) {
-            const ctx = canvasRef.current.getContext("2d");
-            if (ctx && loadedImages[0]) {
-              drawImageCover(ctx, loadedImages[0], canvasRef.current);
-            }
+      // 2. Preload the remaining frames in the background
+      const preloadRemaining = async () => {
+        const promises = [];
+        for (let i = 1; i <= frameCount; i++) {
+          promises.push(loadImage(i));
+        }
+        
+        try {
+          const allImages = await Promise.all(promises);
+          if (isMounted) {
+            setImages(allImages);
+            setIsLoading(false);
           }
+        } catch (err) {
+          console.error("Failed to preload some images", err);
         }
       };
-      loadedImages.push(img);
-    }
+      
+      preloadRemaining();
+    });
+
+    return () => { isMounted = false; };
   }, []);
 
   // ─── 2. Render frame on scroll ────────────────────────
   useMotionValueEvent(frameIndex, "change", (latest) => {
-    if (images.length === frameCount && canvasRef.current) {
-      const currentFrame = Math.round(latest);
+    if (images.length > 0 && canvasRef.current) {
+      const currentFrame = Math.min(Math.max(Math.round(latest), 0), images.length - 1);
       const ctx = canvasRef.current.getContext("2d");
       if (ctx && images[currentFrame]) {
         drawImageCover(ctx, images[currentFrame], canvasRef.current);
@@ -60,12 +87,16 @@ export default function ScrollyCanvas() {
   useEffect(() => {
     const handleResize = () => {
       if (canvasRef.current) {
-        canvasRef.current.width  = window.innerWidth;
-        canvasRef.current.height = window.innerHeight;
+        // Set display size
+        canvasRef.current.width  = window.innerWidth * (window.devicePixelRatio || 1);
+        canvasRef.current.height = window.innerHeight * (window.devicePixelRatio || 1);
+        
         const currentFrame = Math.round(frameIndex.get());
-        if (images.length === frameCount && images[currentFrame]) {
+        const imgToDraw = images[currentFrame] || images[0];
+        
+        if (imgToDraw) {
           const ctx = canvasRef.current.getContext("2d");
-          if (ctx) drawImageCover(ctx, images[currentFrame], canvasRef.current);
+          if (ctx) drawImageCover(ctx, imgToDraw, canvasRef.current);
         }
       }
     };
@@ -103,12 +134,25 @@ export default function ScrollyCanvas() {
   return (
     <div className="relative h-[500vh]">
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#121212]">
+        
+        {/* Loading Overlay */}
+        {isLoading && !isFirstFrameLoaded && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[#121212]">
+            <div className="flex flex-col items-center gap-4">
+              <div className="h-10 w-10 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+              <p className="text-xs font-bold tracking-[0.3em] text-blue-400 uppercase">Loading Experience</p>
+            </div>
+          </div>
+        )}
 
-        {/* Canvas with scroll-linked zoom + breathing pulse */}
+        {/* Canvas with scroll-linked zoom */}
         <motion.canvas
           ref={canvasRef}
-          style={{ scale }}
-          className="h-full w-full object-cover animate-breathe"
+          style={{ 
+            scale,
+            filter: "contrast(1.05) brightness(0.95)"
+          }}
+          className="h-full w-full pointer-events-none"
         />
 
         {/* Animated gradient color shift overlay (light flicker) */}
