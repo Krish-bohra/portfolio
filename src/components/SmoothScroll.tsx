@@ -12,17 +12,18 @@ export default function SmoothScroll({
 }) {
   const lenisRef = useRef<Lenis | null>(null);
 
-  useEffect(() => {
+    const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+
     // 1. Initialize Lenis with premium settings
     const lenis = new Lenis({
-      duration: 1.5,
+      duration: isTouch ? 1.0 : 1.5,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 2.0,
-      lerp: 0.1, // Added for linear interpolation smoothness
+      touchMultiplier: isTouch ? 1.5 : 2.0,
+      lerp: isTouch ? 0.08 : 0.1, 
       infinite: false,
     });
 

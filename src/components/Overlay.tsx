@@ -117,29 +117,31 @@ export default function Overlay() {
     }
   };
 
-  // Opacity & Blur maps (Widened for better dwell time)
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+
+  // Opacity & Blur maps (Widened significantly for mobile)
   const opacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 1, 0]);
   const blur1    = useTransform(scrollYProgress, [0, 0.15, 0.25], ["blur(0px)", "blur(0px)", "blur(8px)"]);
 
-  const opacity2 = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], [0, 1, 1, 0]);
-  const blur2    = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
+  const opacity2 = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], [0, 1, 1, 0]);
+  const blur2    = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
 
-  const opacity3 = useTransform(scrollYProgress, [0.65, 0.75, 1], [0, 1, 1]);
-  const blur3    = useTransform(scrollYProgress, [0.65, 0.75, 1], ["blur(8px)", "blur(0px)", "blur(0px)"]);
+  const opacity3 = useTransform(scrollYProgress, isMobile ? [0.65, 0.78, 1] : [0.65, 0.75, 1], [0, 1, 1]);
+  const blur3    = useTransform(scrollYProgress, isMobile ? [0.65, 0.78, 1] : [0.65, 0.75, 1], ["blur(8px)", "blur(0px)", "blur(0px)"]);
 
-  // Y parallax (Smoothed)
-  const y1 = useTransform(scrollYProgress, [0, 0.25],  [0, -80]);
-  const y2 = useTransform(scrollYProgress, [0.22, 0.62], [80, -80]);
+  // Y parallax (Smoothed for mobile performance)
+  const y1 = useTransform(scrollYProgress, [0, 0.25],  isMobile ? [0, -40] : [0, -80]);
+  const y2 = useTransform(scrollYProgress, isMobile ? [0.18, 0.68] : [0.22, 0.62], isMobile ? [40, -40] : [80, -80]);
   const y3 = useTransform(scrollYProgress, [0.65, 0.9], [80, 0]);
 
   // Scroll‑storytelling: staggered opacity for section 2 elements (More overlap)
-  const opacityBio  = useTransform(scrollYProgress, [0.22, 0.35, 0.5, 0.62], [0, 1, 1, 0]);
-  const opacityEdu  = useTransform(scrollYProgress, [0.25, 0.38, 0.5, 0.62], [0, 1, 1, 0]);
+  const opacityBio  = useTransform(scrollYProgress, isMobile ? [0.18, 0.3, 0.55, 0.68] : [0.22, 0.35, 0.5, 0.62], [0, 1, 1, 0]);
+  const opacityEdu  = useTransform(scrollYProgress, isMobile ? [0.22, 0.35, 0.55, 0.68] : [0.25, 0.38, 0.5, 0.62], [0, 1, 1, 0]);
 
-  // Cinematic X slides
-  const xLeft          = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], [-80, 0, 0, -80]);
-  const xRight         = useTransform(scrollYProgress, [0.25, 0.38, 0.52, 0.62], [80, 0, 0, 80]);
-  const xRightSection3 = useTransform(scrollYProgress, [0.65, 0.75, 1],   [80, 0, 0]);
+  // Cinematic X slides (Reduced on mobile)
+  const xLeft          = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], isMobile ? [-40, 0, 0, -40] : [-80, 0, 0, -80]);
+  const xRight         = useTransform(scrollYProgress, isMobile ? [0.22, 0.35, 0.58, 0.68] : [0.25, 0.38, 0.52, 0.62], isMobile ? [40, 0, 0, 40] : [80, 0, 0, 80]);
+  const xRightSection3 = useTransform(scrollYProgress, [0.65, 0.75, 1],   isMobile ? [0, 0, 0] : [80, 0, 0]);
 
   // Hero parallax layers
   const heroTextY     = useTransform(scrollYProgress, [0, 0.25], [0, -40]);
@@ -148,8 +150,8 @@ export default function Overlay() {
   const heroRotate    = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
 
   // Spring scale for whole section 2
-  const scaleBase  = useTransform(scrollYProgress, [0.22, 0.32, 0.52, 0.62], [0.9, 1, 1, 0.9]);
-  const scaleCards = useSpring(scaleBase, { stiffness: 100, damping: 25 });
+  const scaleBase  = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], isMobile ? [0.95, 1, 1, 0.95] : [0.9, 1, 1, 0.9]);
+  const scaleCards = useSpring(scaleBase, { stiffness: 80, damping: 20 });
 
   // Breathing animation for the canvas zoom (referenced in ScrollyCanvas, kept here for reference)
   const canvasScaleY = useTransform(scrollYProgress, [0, 1], [1, 1.1]);

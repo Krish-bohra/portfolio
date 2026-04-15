@@ -33,16 +33,21 @@ export default function ScrollyCanvas() {
         const paddedIndex = String(index).padStart(3, "0");
         img.src = `/sequence/ezgif-frame-${paddedIndex}.png`;
         img.onload = () => resolve(img);
-        img.onerror = reject;
+        img.onerror = () => {
+          // Fallback to previous image if one fails to load
+          console.warn(`Failed to load frame ${index}`);
+          resolve(new Image()); 
+        };
       });
     };
+
+    const isMobile = window.innerWidth < 768;
 
     // 1. Load the first frame immediately
     loadImage(1).then((firstImg) => {
       if (!isMounted) return;
       setIsFirstFrameLoaded(true);
       
-      // Initial draw
       if (canvasRef.current) {
         const ctx = canvasRef.current.getContext("2d");
         if (ctx) drawImageCover(ctx, firstImg, canvasRef.current);
@@ -51,18 +56,21 @@ export default function ScrollyCanvas() {
       // 2. Preload the remaining frames in the background
       const preloadRemaining = async () => {
         const promises = [];
-        for (let i = 1; i <= frameCount; i++) {
+        // On mobile, only load every 2nd frame to save 50% memory
+        const step = isMobile ? 2 : 1;
+        
+        for (let i = 1; i <= frameCount; i += step) {
           promises.push(loadImage(i));
         }
         
         try {
-          const allImages = await Promise.all(promises);
+          const loaded = await Promise.all(promises);
           if (isMounted) {
-            setImages(allImages);
+            setImages(loaded);
             setIsLoading(false);
           }
         } catch (err) {
-          console.error("Failed to preload some images", err);
+          console.error("Failed to preload sequence", err);
         }
       };
       
@@ -75,10 +83,16 @@ export default function ScrollyCanvas() {
   // ─── 2. Render frame on scroll ────────────────────────
   useMotionValueEvent(frameIndex, "change", (latest) => {
     if (images.length > 0 && canvasRef.current) {
-      const currentFrame = Math.min(Math.max(Math.round(latest), 0), images.length - 1);
+      const isMobile = window.innerWidth < 768;
+      // On mobile, images.length is 60, total frames is 120.
+      // So we map latest (0-119) to (0-59)
+      const mappedIndex = isMobile 
+        ? Math.min(Math.floor(latest / 2), images.length - 1)
+        : Math.min(Math.floor(latest), images.length - 1);
+
       const ctx = canvasRef.current.getContext("2d");
-      if (ctx && images[currentFrame]) {
-        drawImageCover(ctx, images[currentFrame], canvasRef.current);
+      if (ctx && images[mappedIndex]) {
+        drawImageCover(ctx, images[mappedIndex], canvasRef.current);
       }
     }
   });

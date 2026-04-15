@@ -56,13 +56,18 @@ export default function Certificates() {
   const [selectedCert, setSelectedCert] = useState<typeof certificates[0] | null>(null);
 
   useGSAP(() => {
-    // Set initial states for cards: only first is visible, others are rotated to 90deg
+    if (!containerRef.current) return;
+
+    const isMobile = window.innerWidth < 768;
+
+    // Set initial states for cards: only first is visible
     cardsRef.current.forEach((card, index) => {
       if (!card) return;
       if (index === 0) {
         gsap.set(card, { rotateY: 0, opacity: 1, zIndex: 50 });
       } else {
-        gsap.set(card, { rotateY: 90, opacity: 0, zIndex: 50 - index });
+        // Less rotation on mobile to save memory/rendering
+        gsap.set(card, { rotateY: isMobile ? 80 : 90, opacity: 0, zIndex: 50 - index });
       }
     });
 
@@ -70,10 +75,11 @@ export default function Certificates() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: "+=3000",
-        scrub: 1.5,
+        end: isMobile ? "+=1800" : "+=3000", // Shorter scroll on mobile
+        scrub: isMobile ? 0.8 : 1.5,
         pin: true,
         anticipatePin: 1,
+        invalidateOnRefresh: true,
       },
     });
 
@@ -81,16 +87,16 @@ export default function Certificates() {
       const currentCard = cardsRef.current[index];
       const nextCard = cardsRef.current[index + 1];
 
-      // Add a small pause for each card
-      tl.to({}, { duration: 0.5 });
+      // Hold time for each card
+      tl.to({}, { duration: 0.4 });
 
       if (index < certificates.length - 1 && currentCard && nextCard) {
         tl.to(
           currentCard,
           {
-            rotateY: -90,
+            rotateY: isMobile ? -80 : -90,
             opacity: 0,
-            zIndex: 0, // Move old card to back
+            zIndex: 0,
             duration: 1,
             ease: "power2.inOut",
           },
@@ -102,7 +108,7 @@ export default function Certificates() {
           {
             rotateY: 0,
             opacity: 1,
-            zIndex: 50, // Bring new card to front
+            zIndex: 50,
             duration: 1,
             ease: "power2.inOut",
           },
@@ -111,8 +117,9 @@ export default function Certificates() {
       }
     });
 
-    // Refresh ScrollTrigger after a slight delay to ensure layout is ready
-    ScrollTrigger.refresh();
+    return () => {
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
   }, { scope: containerRef });
 
 
