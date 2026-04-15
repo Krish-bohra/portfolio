@@ -12,6 +12,7 @@ export default function SmoothScroll({
 }) {
   const lenisRef = useRef<Lenis | null>(null);
 
+  useEffect(() => {
     const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
     // 1. Initialize Lenis with premium settings
