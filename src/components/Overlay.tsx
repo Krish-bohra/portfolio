@@ -121,13 +121,13 @@ export default function Overlay() {
 
   // Opacity & Blur maps (Widened significantly for mobile)
   const opacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 1, 0]);
-  const blur1    = useTransform(scrollYProgress, [0, 0.15, 0.25], ["blur(0px)", "blur(0px)", "blur(8px)"]);
+  const blur1    = useTransform(scrollYProgress, [0, 0.15, 0.25], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(0px)", "blur(0px)", "blur(8px)"]);
 
   const opacity2 = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], [0, 1, 1, 0]);
-  const blur2    = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
+  const blur2    = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
 
   const opacity3 = useTransform(scrollYProgress, isMobile ? [0.65, 0.78, 1] : [0.65, 0.75, 1], [0, 1, 1]);
-  const blur3    = useTransform(scrollYProgress, isMobile ? [0.65, 0.78, 1] : [0.65, 0.75, 1], ["blur(8px)", "blur(0px)", "blur(0px)"]);
+  const blur3    = useTransform(scrollYProgress, isMobile ? [0.65, 0.78, 1] : [0.65, 0.75, 1], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)"]);
 
   // Y parallax (Smoothed for mobile performance)
   const y1 = useTransform(scrollYProgress, [0, 0.25],  isMobile ? [0, -40] : [0, -80]);
