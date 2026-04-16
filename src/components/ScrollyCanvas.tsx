@@ -11,8 +11,9 @@ export default function ScrollyCanvas() {
   const [isFirstFrameLoaded, setIsFirstFrameLoaded] = useState(false);
   const frameCount = 120;
 
-  // ─── Scroll → Frame index ──────────────────────────────
-  const frameIndex = useTransform(scrollYProgress, [0, 1], [0, frameCount - 1]);
+  // ─── Scroll → Frame index (with spring for buttery smoothness) ──
+  const frameIndexRaw = useTransform(scrollYProgress, [0, 1], [0, frameCount - 1]);
+  const frameIndex = useSpring(frameIndexRaw, { stiffness: 400, damping: 40, mass: 0.1 });
 
   // ─── Scroll-linked zoom (1→1.12 over full scroll) ─────
   const scaleRaw = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
@@ -24,17 +25,22 @@ export default function ScrollyCanvas() {
   // ─── 1. Load First Frame Fast + Preload Rest ───────────
   useEffect(() => {
     let isMounted = true;
-    const loadedImages: HTMLImageElement[] = [];
     
-    // Function to load a single image
+    // Function to load and decode a single image
     const loadImage = (index: number): Promise<HTMLImageElement> => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const img = new Image();
         const paddedIndex = String(index).padStart(3, "0");
         img.src = `/sequence/ezgif-frame-${paddedIndex}.png`;
-        img.onload = () => resolve(img);
+        img.onload = async () => {
+          try {
+            if ('decode' in img) await img.decode();
+            resolve(img);
+          } catch {
+            resolve(img);
+          }
+        };
         img.onerror = () => {
-          // Fallback to previous image if one fails to load
           console.warn(`Failed to load frame ${index}`);
           resolve(new Image()); 
         };
@@ -49,28 +55,28 @@ export default function ScrollyCanvas() {
       setIsFirstFrameLoaded(true);
       
       if (canvasRef.current) {
-        const ctx = canvasRef.current.getContext("2d");
+        const ctx = canvasRef.current.getContext("2d", { alpha: false });
         if (ctx) drawImageCover(ctx, firstImg, canvasRef.current);
       }
 
       // 2. Preload the remaining frames in the background
       const preloadRemaining = async () => {
         const promises = [];
-        // On mobile, only load every 2nd frame to save 50% memory
         const step = isMobile ? 2 : 1;
         
         for (let i = 1; i <= frameCount; i += step) {
           promises.push(loadImage(i));
         }
         
-        try {
-          const loaded = await Promise.all(promises);
-          if (isMounted) {
-            setImages(loaded);
-            setIsLoading(false);
+        const loaded = await Promise.all(promises);
+        if (isMounted) {
+          setImages(loaded);
+          setIsLoading(false);
+          // Initial refresh once all images are decoded
+          if (canvasRef.current) {
+            const ctx = canvasRef.current.getContext("2d", { alpha: false });
+            if (ctx && loaded[0]) drawImageCover(ctx, loaded[0], canvasRef.current);
           }
-        } catch (err) {
-          console.error("Failed to preload sequence", err);
         }
       };
       
@@ -91,19 +97,13 @@ export default function ScrollyCanvas() {
         ? Math.min(Math.floor(latest / 2), images.length - 1)
         : Math.min(Math.floor(latest), images.length - 1);
 
-      // Optimization: Only redraw if the frame actually changed
       if (mappedIndex === lastDrawnFrame.current) return;
       lastDrawnFrame.current = mappedIndex;
 
-      const ctx = canvasRef.current.getContext("2d");
+      const ctx = canvasRef.current.getContext("2d", { alpha: false });
       if (ctx && images[mappedIndex]) {
-        // Use requestAnimationFrame for smoother rendering on high-refresh screens
-        requestAnimationFrame(() => {
-          if (canvasRef.current && images[mappedIndex]) {
-            const ctx = canvasRef.current.getContext("2d");
-            if (ctx) drawImageCover(ctx, images[mappedIndex], canvasRef.current);
-          }
-        });
+        // Draw immediately for direct feedback, but ensure no backlogs
+        drawImageCover(ctx, images[mappedIndex], canvasRef.current);
       }
     }
   });
@@ -154,7 +154,7 @@ export default function ScrollyCanvas() {
       offsetY      = 0;
     }
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // ctx.clearRect(0, 0, canvas.width, canvas.height); // Removed for performance as image covers full area
     ctx.drawImage(img, offsetX, offsetY, renderWidth, renderHeight);
   };
 
