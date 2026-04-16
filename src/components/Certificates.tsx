@@ -1,16 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 // @ts-ignore
 import { gsap } from "gsap";
 // @ts-ignore
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { Observer } from "gsap/dist/Observer";
 import { useGSAP } from "@gsap/react";
-import { Award, Code, Shield, Cpu, Database, X, Search } from "lucide-react";
+import { Award, Code, Shield, Cpu, Database, X, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, Observer);
 
 const certificates = [
   {
@@ -55,79 +56,177 @@ export default function Certificates() {
   const containerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const [selectedCert, setSelectedCert] = useState<typeof certificates[0] | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useGSAP(() => {
     if (!containerRef.current) return;
 
-    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      // MOBILE LOGIC: Pinned with Swipe
+      // Set initial state for mobile
+      cardsRef.current.forEach((card: HTMLDivElement | null, i: number) => {
+        if (!card) return;
+        gsap.set(card, {
+          xPercent: i === 0 ? 0 : 100,
+          opacity: i === 0 ? 1 : 0,
+          scale: i === 0 ? 1 : 0.9,
+          zIndex: certificates.length - i,
+        });
+      });
 
-    // Set initial states for cards: only first is visible
-    cardsRef.current.forEach((card, index) => {
-      if (!card) return;
-      if (index === 0) {
-        gsap.set(card, { rotateY: 0, opacity: 1, zIndex: 50 });
-      } else {
-        // Less rotation on mobile to save memory/rendering
-        gsap.set(card, { rotateY: isMobile ? 80 : 90, opacity: 0, zIndex: 50 - index });
-      }
-    });
+      let animating = false;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
+      const gotoSection = (index: number, direction: number) => {
+        if (animating || index < 0 || index >= certificates.length) return;
+        animating = true;
+
+        const currentCard = cardsRef.current[currentIndex];
+        const nextCard = cardsRef.current[index];
+
+        const tl = gsap.timeline({
+          onComplete: () => {
+            animating = false;
+            setCurrentIndex(index);
+          }
+        });
+
+        if (currentCard) {
+          tl.to(currentCard, {
+            xPercent: direction > 0 ? -100 : 100,
+            opacity: 0,
+            scale: 0.9,
+            duration: 0.6,
+            ease: "power2.inOut"
+          }, 0);
+        }
+
+        if (nextCard) {
+          gsap.set(nextCard, { 
+            xPercent: direction > 0 ? 100 : -100, 
+            opacity: 0, 
+            scale: 0.9,
+            zIndex: 60 // Ensure it's above the outgoing card
+          });
+          tl.to(nextCard, {
+            xPercent: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.6,
+            ease: "power2.inOut"
+          }, 0);
+        }
+      };
+
+      // Create a ScrollTrigger that pins for a long distance on mobile
+      const pinTrigger = ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
-        end: isMobile ? "+=1200" : "+=3000", // Shorter scroll on mobile for better feel
-        scrub: isMobile ? 0.4 : 1.5, // Faster response on mobile
+        end: "+=3000",
         pin: true,
         anticipatePin: 1,
-        invalidateOnRefresh: true,
-      },
-    });
+      });
 
-    certificates.forEach((_, index) => {
-      const currentCard = cardsRef.current[index];
-      const nextCard = cardsRef.current[index + 1];
+      const observer = Observer.create({
+        target: containerRef.current,
+        type: "wheel,touch,pointer",
+        onUp: () => {
+          // Scroll up or swipe down
+          if (currentIndex > 0) gotoSection(currentIndex - 1, -1);
+        },
+        onDown: () => {
+          // Scroll down or swipe up
+          if (currentIndex < certificates.length - 1) {
+            gotoSection(currentIndex + 1, 1);
+          }
+        },
+        onLeft: () => gotoSection(currentIndex + 1, 1),
+        onRight: () => gotoSection(currentIndex - 1, -1),
+        tolerance: 50,
+        preventDefault: true
+      });
 
-      // Hold time for each card
-      tl.to({}, { duration: 0.3 });
+      return () => {
+        pinTrigger.kill();
+        observer.kill();
+      };
 
-      if (index < certificates.length - 1 && currentCard && nextCard) {
-        tl.to(
-          currentCard,
-          {
-            // On mobile: slide up and fade out instead of messy 3D rotation
-            y: isMobile ? -50 : 0,
-            rotateY: isMobile ? -15 : -90,
-            scale: isMobile ? 0.9 : 1,
-            opacity: 0,
-            zIndex: 0,
-            duration: 1,
-            ease: "power2.inOut",
-          },
-          `transition-${index}`
-        );
+    } else {
+      // DESKTOP LOGIC: Smooth Scrub
+      cardsRef.current.forEach((card: HTMLDivElement | null, index: number) => {
+        if (!card) return;
+        if (index === 0) {
+          gsap.set(card, { rotateY: 0, opacity: 1, zIndex: 50 });
+        } else {
+          gsap.set(card, { rotateY: 90, opacity: 0, zIndex: 50 - index });
+        }
+      });
 
-        tl.to(
-          nextCard,
-          {
-            y: 0,
-            rotateY: 0,
-            scale: 1,
-            opacity: 1,
-            zIndex: 50,
-            duration: 1,
-            ease: "power2.inOut",
-          },
-          `transition-${index}`
-        );
-      }
-    });
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "+=4500", // Longer distance for smoother feel
+          scrub: 2, // More damping for premium feel
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
 
-    return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
-    };
-  }, { scope: containerRef });
+      certificates.forEach((_, index) => {
+        const currentCard = cardsRef.current[index];
+        const nextCard = cardsRef.current[index + 1];
 
+        // Increased "hold" time for each card to allow reading
+        tl.to({}, { duration: 0.5 });
+
+        if (index < certificates.length - 1 && currentCard && nextCard) {
+          tl.to(
+            currentCard,
+            {
+              rotateY: -90,
+              scale: 0.8,
+              opacity: 0,
+              z: -500, // Move back in space
+              filter: "blur(10px)",
+              duration: 1.5,
+              ease: "power2.inOut",
+            },
+            `transition-${index}`
+          );
+
+          tl.to(
+            nextCard,
+            {
+              rotateY: 0,
+              scale: 1,
+              opacity: 1,
+              z: 0,
+              filter: "blur(0px)",
+              duration: 1.5,
+              ease: "power2.inOut",
+            },
+            `transition-${index}`
+          );
+          
+          // Hold the new card
+          tl.to({}, { duration: 0.5 });
+        }
+      });
+
+      return () => {
+        ScrollTrigger.getAll().forEach(t => t.kill());
+      };
+    }
+  }, { scope: containerRef, dependencies: [isMobile] });
 
   return (
     <>
@@ -143,8 +242,22 @@ export default function Certificates() {
           <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white">
             Certifications<span className="text-blue-500">.</span>
           </h2>
-          <p className="mt-4 text-white/50 lowercase tracking-widest text-sm">Click to expand any certificate</p>
+          <p className="mt-4 text-white/50 lowercase tracking-widest text-sm">
+            {isMobile ? "Swipe to see more" : "Scroll to see more"}
+          </p>
         </div>
+
+        {/* Mobile Navigation Indicators */}
+        {isMobile && (
+          <div className="absolute bottom-12 left-0 right-0 z-30 flex justify-center gap-2">
+            {certificates.map((_, i) => (
+              <div 
+                key={i}
+                className={`h-1 transition-all duration-300 rounded-full ${i === currentIndex ? "w-8 bg-blue-500" : "w-2 bg-white/20"}`}
+              />
+            ))}
+          </div>
+        )}
 
         {/* 3D Perspective Container */}
         <div
