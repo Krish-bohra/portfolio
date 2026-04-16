@@ -60,8 +60,8 @@ export default function Certificates() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    setIsMobile(window.innerWidth < 1024); // More inclusive mobile/tablet check
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -70,15 +70,14 @@ export default function Certificates() {
     if (!containerRef.current) return;
 
     if (isMobile) {
-      // MOBILE LOGIC: Pinned with Swipe
-      // Set initial state for mobile
-      cardsRef.current.forEach((card: HTMLDivElement | null, i: number) => {
+      // MOBILE: Pinned Swipe logic
+      cardsRef.current.forEach((card, i) => {
         if (!card) return;
         gsap.set(card, {
           xPercent: i === 0 ? 0 : 100,
           opacity: i === 0 ? 1 : 0,
-          scale: i === 0 ? 1 : 0.9,
-          zIndex: certificates.length - i,
+          scale: i === 0 ? 1 : 0.85,
+          zIndex: 50 - i
         });
       });
 
@@ -102,9 +101,9 @@ export default function Certificates() {
           tl.to(currentCard, {
             xPercent: direction > 0 ? -100 : 100,
             opacity: 0,
-            scale: 0.9,
-            duration: 0.6,
-            ease: "power2.inOut"
+            scale: 0.85,
+            duration: 0.7,
+            ease: "expo.out"
           }, 0);
         }
 
@@ -112,24 +111,24 @@ export default function Certificates() {
           gsap.set(nextCard, { 
             xPercent: direction > 0 ? 100 : -100, 
             opacity: 0, 
-            scale: 0.9,
-            zIndex: 60 // Ensure it's above the outgoing card
+            scale: 0.85,
+            zIndex: 60
           });
           tl.to(nextCard, {
             xPercent: 0,
             opacity: 1,
             scale: 1,
-            duration: 0.6,
-            ease: "power2.inOut"
+            duration: 0.7,
+            ease: "expo.out"
           }, 0);
         }
       };
 
-      // Create a ScrollTrigger that pins for a long distance on mobile
-      const pinTrigger = ScrollTrigger.create({
+      // Persistent Pin
+      const pin = ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
-        end: "+=3000",
+        end: "+=3500", // Long enough to handle swiping
         pin: true,
         anticipatePin: 1,
       });
@@ -138,11 +137,9 @@ export default function Certificates() {
         target: containerRef.current,
         type: "wheel,touch,pointer",
         onUp: () => {
-          // Scroll up or swipe down
           if (currentIndex > 0) gotoSection(currentIndex - 1, -1);
         },
         onDown: () => {
-          // Scroll down or swipe up
           if (currentIndex < certificates.length - 1) {
             gotoSection(currentIndex + 1, 1);
           }
@@ -154,14 +151,16 @@ export default function Certificates() {
       });
 
       return () => {
-        pinTrigger.kill();
+        pin.kill();
         observer.kill();
       };
 
     } else {
-      // DESKTOP LOGIC: Smooth Scrub
-      cardsRef.current.forEach((card: HTMLDivElement | null, index: number) => {
+      // DESKTOP: Smooth 3D Scrub
+      cardsRef.current.forEach((card, index) => {
         if (!card) return;
+        // Reset states for desktop
+        gsap.set(card, { xPercent: 0, y: 0, scale: 1, filter: "blur(0px)", z: 0 });
         if (index === 0) {
           gsap.set(card, { rotateY: 0, opacity: 1, zIndex: 50 });
         } else {
@@ -173,11 +172,10 @@ export default function Certificates() {
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top top",
-          end: "+=4500", // Longer distance for smoother feel
-          scrub: 2, // More damping for premium feel
+          end: "+=5000", // Even more space for smoothness
+          scrub: 2.5, // High damping for premium feel
           pin: true,
           anticipatePin: 1,
-          invalidateOnRefresh: true,
         },
       });
 
@@ -185,19 +183,18 @@ export default function Certificates() {
         const currentCard = cardsRef.current[index];
         const nextCard = cardsRef.current[index + 1];
 
-        // Increased "hold" time for each card to allow reading
-        tl.to({}, { duration: 0.5 });
+        tl.to({}, { duration: 0.4 }); // Initial hold
 
         if (index < certificates.length - 1 && currentCard && nextCard) {
           tl.to(
             currentCard,
             {
               rotateY: -90,
-              scale: 0.8,
+              scale: 0.75,
               opacity: 0,
-              z: -500, // Move back in space
-              filter: "blur(10px)",
-              duration: 1.5,
+              z: -800,
+              filter: "blur(15px)",
+              duration: 2,
               ease: "power2.inOut",
             },
             `transition-${index}`
@@ -211,14 +208,13 @@ export default function Certificates() {
               opacity: 1,
               z: 0,
               filter: "blur(0px)",
-              duration: 1.5,
+              duration: 2,
               ease: "power2.inOut",
             },
             `transition-${index}`
           );
           
-          // Hold the new card
-          tl.to({}, { duration: 0.5 });
+          tl.to({}, { duration: 0.4 }); // Hold card
         }
       });
 
@@ -243,7 +239,7 @@ export default function Certificates() {
             Certifications<span className="text-blue-500">.</span>
           </h2>
           <p className="mt-4 text-white/50 lowercase tracking-widest text-sm">
-            {isMobile ? "Swipe to see more" : "Scroll to see more"}
+            {isMobile ? "Swipe to explore" : "Scroll to explore"}
           </p>
         </div>
 
@@ -253,7 +249,7 @@ export default function Certificates() {
             {certificates.map((_, i) => (
               <div 
                 key={i}
-                className={`h-1 transition-all duration-300 rounded-full ${i === currentIndex ? "w-8 bg-blue-500" : "w-2 bg-white/20"}`}
+                className={`h-1.5 transition-all duration-500 rounded-full ${i === currentIndex ? "w-10 bg-blue-500" : "w-2 bg-white/20"}`}
               />
             ))}
           </div>
@@ -402,4 +398,3 @@ export default function Certificates() {
     </>
   );
 }
-
