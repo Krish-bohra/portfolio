@@ -3,6 +3,9 @@
 import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, AnimatePresence } from "framer-motion";
 import { ArrowUpRight, ExternalLink, X } from "lucide-react";
 import { useRef, useCallback, useState } from "react";
+import Image from "next/image";
+
+const MotionImage = motion(Image);
 
 const projects = [
   {
@@ -106,13 +109,15 @@ function ProjectCard({
           {/* Project Image Background */}
           {project.imageUrl && (
             <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl">
-              <motion.img
+              <MotionImage
                 src={project.imageUrl}
                 alt={project.title}
+                fill
+                sizes="(max-width: 1024px) 100vw, 80vw"
                 initial={{ scale: 1, opacity: 0.5 }}
                 whileHover={{ scale: 1.1, opacity: 0.85 }}
                 transition={{ duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
-                className="h-full w-full object-cover"
+                className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/20 to-transparent" />
             </div>

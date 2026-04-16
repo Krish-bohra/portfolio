@@ -93,7 +93,7 @@ function RippleButton({ children, className, onClick }: { children: React.ReactN
 // ─── Glowing Keyword ────────────────────────────────────────────────────────────
 function Keyword({ children }: { children: React.ReactNode }) {
   return (
-    <span className="relative font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-blue-500 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]">
+    <span className="relative font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-blue-500 md:drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]">
       {children}
     </span>
   );

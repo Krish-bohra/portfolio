@@ -81,18 +81,29 @@ export default function ScrollyCanvas() {
   }, []);
 
   // ─── 2. Render frame on scroll ────────────────────────
+  const lastDrawnFrame = useRef<number>(-1);
+
   useMotionValueEvent(frameIndex, "change", (latest) => {
     if (images.length > 0 && canvasRef.current) {
       const isMobile = window.innerWidth < 768;
-      // On mobile, images.length is 60, total frames is 120.
-      // So we map latest (0-119) to (0-59)
+      
       const mappedIndex = isMobile 
         ? Math.min(Math.floor(latest / 2), images.length - 1)
         : Math.min(Math.floor(latest), images.length - 1);
 
+      // Optimization: Only redraw if the frame actually changed
+      if (mappedIndex === lastDrawnFrame.current) return;
+      lastDrawnFrame.current = mappedIndex;
+
       const ctx = canvasRef.current.getContext("2d");
       if (ctx && images[mappedIndex]) {
-        drawImageCover(ctx, images[mappedIndex], canvasRef.current);
+        // Use requestAnimationFrame for smoother rendering on high-refresh screens
+        requestAnimationFrame(() => {
+          if (canvasRef.current && images[mappedIndex]) {
+            const ctx = canvasRef.current.getContext("2d");
+            if (ctx) drawImageCover(ctx, images[mappedIndex], canvasRef.current);
+          }
+        });
       }
     }
   });

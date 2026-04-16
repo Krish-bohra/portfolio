@@ -121,11 +121,16 @@ html.lenis body {
 /* Mobile Performance Optimizations */
 @media (max-width: 768px) {
   .glass-deep, .glass-light, .backdrop-blur-md, .backdrop-blur-xl {
-    backdrop-filter: blur(12px) !important;
-    background: rgba(14, 22, 50, 0.75) !important;
+    backdrop-filter: blur(4px) !important; /* Drastically reduced for performance */
+    background: rgba(14, 22, 50, 0.85) !important;
   }
   
   .animate-ripple, .animate-breathe, .shimmer-border {
-    animation-duration: 4s !important; /* Slow down or disable heavy animations */
+    animation: none !important; /* Disable heavy animations on mobile */
+  }
+
+  /* Simplify canvas effects */
+  canvas {
+    filter: none !important;
   }
 }

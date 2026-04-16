@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Award, Code, Shield, Cpu, Database, X, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -75,8 +76,8 @@ export default function Certificates() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: isMobile ? "+=1800" : "+=3000", // Shorter scroll on mobile
-        scrub: isMobile ? 0.8 : 1.5,
+        end: isMobile ? "+=1200" : "+=3000", // Shorter scroll on mobile for better feel
+        scrub: isMobile ? 0.4 : 1.5, // Faster response on mobile
         pin: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
@@ -88,13 +89,16 @@ export default function Certificates() {
       const nextCard = cardsRef.current[index + 1];
 
       // Hold time for each card
-      tl.to({}, { duration: 0.4 });
+      tl.to({}, { duration: 0.3 });
 
       if (index < certificates.length - 1 && currentCard && nextCard) {
         tl.to(
           currentCard,
           {
-            rotateY: isMobile ? -80 : -90,
+            // On mobile: slide up and fade out instead of messy 3D rotation
+            y: isMobile ? -50 : 0,
+            rotateY: isMobile ? -15 : -90,
+            scale: isMobile ? 0.9 : 1,
             opacity: 0,
             zIndex: 0,
             duration: 1,
@@ -106,7 +110,9 @@ export default function Certificates() {
         tl.to(
           nextCard,
           {
+            y: 0,
             rotateY: 0,
+            scale: 1,
             opacity: 1,
             zIndex: 50,
             duration: 1,
@@ -163,10 +169,12 @@ export default function Certificates() {
                 className="group relative h-64 w-full cursor-pointer overflow-hidden bg-white/5 md:h-full md:w-1/2"
                 onClick={() => setSelectedCert(cert)}
               >
-                <img
+                <Image
                   src={cert.image}
                   alt={cert.title}
-                  className="h-full w-full object-contain p-4 transition-transform duration-700 ease-in-out group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-contain p-4 transition-transform duration-700 ease-in-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20 flex items-center justify-center">
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 translate-z-10">
@@ -227,11 +235,15 @@ export default function Certificates() {
               <div className="flex h-full flex-col md:flex-row">
                 {/* Image Section */}
                 <div className="flex-[2] bg-white/5 p-4 flex items-center justify-center">
-                  <img
-                    src={selectedCert.image}
-                    alt={selectedCert.title}
-                    className="max-h-[70vh] w-auto shadow-2xl"
-                  />
+                  <div className="relative h-full w-full min-h-[40vh]">
+                    <Image
+                      src={selectedCert.image}
+                      alt={selectedCert.title}
+                      fill
+                      sizes="(max-width: 1200px) 100vw, 70vw"
+                      className="object-contain shadow-2xl"
+                    />
+                  </div>
                 </div>
                 {/* Info Section */}
                 <div className="flex-1 p-8 md:p-12 flex flex-col justify-center bg-black/60 backdrop-blur-xl">
