@@ -101,42 +101,42 @@ function Keyword({ children }: { children: React.ReactNode }) {
 
 // ─── Main Overlay ───────────────────────────────────────────────────────────────
 export default function Overlay() {
-  const { scrollYProgress } = useScroll();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
   const scrollToProjects = () => {
     const el = document.getElementById("projects");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   const scrollToContact = () => {
     const el = document.getElementById("contact");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
+    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
-  // Opacity & Blur maps (Widened significantly for mobile)
-  const opacity1 = useTransform(scrollYProgress, [0, 0.15, 0.25], [1, 1, 0]);
-  const blur1    = useTransform(scrollYProgress, [0, 0.15, 0.25], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(0px)", "blur(0px)", "blur(8px)"]);
+  // Opacity & Blur maps (Re-scaled to 0-1 of the container)
+  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 1, 0]);
+  const blur1    = useTransform(scrollYProgress, [0, 0.2, 0.3], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(0px)", "blur(0px)", "blur(8px)"]);
 
-  const opacity2 = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], [0, 1, 1, 0]);
-  const blur2    = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
+  const opacity2 = useTransform(scrollYProgress, [0.35, 0.45, 0.65, 0.75], [0, 1, 1, 0]);
+  const blur2    = useTransform(scrollYProgress, [0.35, 0.45, 0.65, 0.75], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
 
-  const opacity3 = useTransform(scrollYProgress, isMobile ? [0.65, 0.78, 1] : [0.65, 0.75, 1], [0, 1, 1]);
-  const blur3    = useTransform(scrollYProgress, isMobile ? [0.65, 0.78, 1] : [0.65, 0.75, 1], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)"]);
+  const opacity3 = useTransform(scrollYProgress, [0.8, 0.9, 1], [0, 1, 1]);
+  const blur3    = useTransform(scrollYProgress, [0.8, 0.9, 1], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)"]);
 
-  // Y parallax (Smoothed for mobile performance)
-  const y1 = useTransform(scrollYProgress, [0, 0.25],  isMobile ? [0, -40] : [0, -80]);
-  const y2 = useTransform(scrollYProgress, isMobile ? [0.18, 0.68] : [0.22, 0.62], isMobile ? [40, -40] : [80, -80]);
-  const y3 = useTransform(scrollYProgress, [0.65, 0.9], [80, 0]);
+  // Y parallax (Smoothed)
+  const y1 = useTransform(scrollYProgress, [0, 0.3],  isMobile ? [0, -30] : [0, -80]);
+  const y2 = useTransform(scrollYProgress, [0.35, 0.75], isMobile ? [30, -30] : [80, -80]);
+  const y3 = useTransform(scrollYProgress, [0.8, 1], [40, 0]);
 
-  // Scroll‑storytelling: staggered opacity for section 2 elements (More overlap)
-  const opacityBio  = useTransform(scrollYProgress, isMobile ? [0.18, 0.3, 0.55, 0.68] : [0.22, 0.35, 0.5, 0.62], [0, 1, 1, 0]);
-  const opacityEdu  = useTransform(scrollYProgress, isMobile ? [0.22, 0.35, 0.55, 0.68] : [0.25, 0.38, 0.5, 0.62], [0, 1, 1, 0]);
+  // Section 2 staggered elements
+  const opacityBio  = useTransform(scrollYProgress, [0.35, 0.48, 0.65, 0.75], [0, 1, 1, 0]);
+  const opacityEdu  = useTransform(scrollYProgress, [0.42, 0.55, 0.65, 0.75], [0, 1, 1, 0]);
 
   // Cinematic X slides (Reduced on mobile)
   const xLeft          = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], isMobile ? [-40, 0, 0, -40] : [-80, 0, 0, -80]);
