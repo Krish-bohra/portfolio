@@ -182,7 +182,7 @@ export default function Certificates() {
               ref={(el) => {
                 cardsRef.current[index] = el;
               }}
-              className="absolute flex w-[90vw] max-w-4xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md pointer-events-auto md:h-[60vh] md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] [transform-style:preserve-3d]"
+              className="absolute flex w-[90vw] max-w-4xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md pointer-events-auto min-h-[50vh] md:h-[60vh] md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] [transform-style:preserve-3d]"
             >
               {/* Background Glow */}
               <div
@@ -191,20 +191,20 @@ export default function Certificates() {
 
               {/* Left side: Image / Visual */}
               <div 
-                className="group relative h-64 w-full cursor-pointer overflow-hidden bg-white/5 md:h-full md:w-1/2"
+                className="group relative h-48 w-full cursor-pointer overflow-hidden bg-white/5 md:h-full md:w-1/2"
                 onClick={() => setSelectedCert(cert)}
               >
                 <Image
                   src={cert.image}
                   alt={cert.title}
                   fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 90vw, 50vw"
                   className="object-contain p-4 transition-transform duration-700 ease-in-out group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20 flex items-center justify-center">
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0 translate-z-10">
-                    <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-black shadow-lg">
-                      <Search className="w-4 h-4" /> View Full
+                    <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold text-black shadow-lg">
+                      <Search className="w-3 h-3" /> View Full
                     </div>
                   </div>
                 </div>
@@ -212,22 +212,25 @@ export default function Certificates() {
               </div>
 
               {/* Right side: Details */}
-              <div className="relative z-10 flex flex-1 flex-col justify-center p-8 md:p-12">
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-inner backdrop-blur-md">
-                  {cert.icon}
+              <div className="relative z-10 flex flex-1 flex-col justify-center p-6 md:p-12">
+                <div className="mb-4 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-inner backdrop-blur-md">
+                  {/* Scale icon for mobile */}
+                  <div className="scale-75 md:scale-100">
+                    {cert.icon}
+                  </div>
                 </div>
 
                 <div className="inline-flex items-center gap-2 mb-2">
-                  <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/70 uppercase tracking-widest backdrop-blur-sm">
+                  <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] md:text-xs font-semibold text-white/70 uppercase tracking-widest backdrop-blur-sm">
                     {cert.year}
                   </span>
                 </div>
 
-                <h3 className="mb-2 text-3xl font-bold tracking-tight text-white md:text-4xl">
+                <h3 className="mb-2 text-xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl">
                   {cert.title}
                 </h3>
 
-                <p className="mb-8 text-lg text-white/50">
+                <p className="mb-6 text-sm md:text-lg text-white/50">
                   Issued by <span className="text-white/80">{cert.issuer}</span>
                 </p>
 

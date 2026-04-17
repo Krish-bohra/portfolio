@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from "framer-motion";
 import { ArrowRight, Download, Mail, Headphones, ExternalLink } from "lucide-react";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 
 // ─── 3D Tilt Card ──────────────────────────────────────────────────────────────
 function TiltCard({ children, className, style }: { children: React.ReactNode; className: string; style?: React.CSSProperties }) {
@@ -101,9 +101,15 @@ function Keyword({ children }: { children: React.ReactNode }) {
 
 // ─── Main Overlay ───────────────────────────────────────────────────────────────
 export default function Overlay() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    // Find the parent section by ID for perfect sync
+    setContainerRef(document.getElementById("hero-section"));
+  }, []);
+
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    target: containerRef ? { current: containerRef } : undefined,
     offset: ["start start", "end end"]
   });
 
@@ -119,24 +125,24 @@ export default function Overlay() {
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
 
-  // Opacity & Blur maps (Re-scaled to 0-1 of the container)
-  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 1, 0]);
-  const blur1    = useTransform(scrollYProgress, [0, 0.2, 0.3], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(0px)", "blur(0px)", "blur(8px)"]);
+  // Opacity & Blur maps (Spread out over 800vh)
+  const opacity1 = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
+  const blur1    = useTransform(scrollYProgress, [0, 0.1, 0.2], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(0px)", "blur(0px)", "blur(8px)"]);
 
-  const opacity2 = useTransform(scrollYProgress, [0.35, 0.45, 0.65, 0.75], [0, 1, 1, 0]);
-  const blur2    = useTransform(scrollYProgress, [0.35, 0.45, 0.65, 0.75], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
+  const opacity2 = useTransform(scrollYProgress, [0.25, 0.35, 0.55, 0.65], [0, 1, 1, 0]);
+  const blur2    = useTransform(scrollYProgress, [0.25, 0.35, 0.55, 0.65], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
 
-  const opacity3 = useTransform(scrollYProgress, [0.8, 0.9, 1], [0, 1, 1]);
-  const blur3    = useTransform(scrollYProgress, [0.8, 0.9, 1], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)"]);
+  const opacity3 = useTransform(scrollYProgress, [0.75, 0.85, 1], [0, 1, 1]);
+  const blur3    = useTransform(scrollYProgress, [0.75, 0.85, 1], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)"]);
 
-  // Y parallax (Smoothed)
-  const y1 = useTransform(scrollYProgress, [0, 0.3],  isMobile ? [0, -30] : [0, -80]);
-  const y2 = useTransform(scrollYProgress, [0.35, 0.75], isMobile ? [30, -30] : [80, -80]);
-  const y3 = useTransform(scrollYProgress, [0.8, 1], [40, 0]);
+  // Y parallax
+  const y1 = useTransform(scrollYProgress, [0, 0.2],  isMobile ? [0, -30] : [0, -80]);
+  const y2 = useTransform(scrollYProgress, [0.25, 0.65], isMobile ? [30, -30] : [80, -80]);
+  const y3 = useTransform(scrollYProgress, [0.75, 1], [40, 0]);
 
   // Section 2 staggered elements
-  const opacityBio  = useTransform(scrollYProgress, [0.35, 0.48, 0.65, 0.75], [0, 1, 1, 0]);
-  const opacityEdu  = useTransform(scrollYProgress, [0.42, 0.55, 0.65, 0.75], [0, 1, 1, 0]);
+  const opacityBio  = useTransform(scrollYProgress, [0.25, 0.38, 0.55, 0.65], [0, 1, 1, 0]);
+  const opacityEdu  = useTransform(scrollYProgress, [0.32, 0.45, 0.55, 0.65], [0, 1, 1, 0]);
 
   // Cinematic X slides (Reduced on mobile)
   const xLeft          = useTransform(scrollYProgress, isMobile ? [0.18, 0.28, 0.58, 0.68] : [0.22, 0.32, 0.52, 0.62], isMobile ? [-40, 0, 0, -40] : [-80, 0, 0, -80]);
@@ -158,7 +164,7 @@ export default function Overlay() {
 
   return (
     <>
-      {/* ── Noise Texture Overlay (Disabled on mobile for performance) ── */}
+      {/* ── Noise Texture Overlay ── */}
       <div
         className="pointer-events-none fixed inset-0 z-[5] opacity-[0.035] hidden md:block"
         style={{
@@ -168,7 +174,7 @@ export default function Overlay() {
         }}
       />
 
-      <div className="pointer-events-none absolute left-0 top-0 z-10 w-full h-[500vh]">
+      <div className="pointer-events-none absolute left-0 top-0 z-10 w-full h-full">
 
         {/* ══════════════════════════════════════════════════════
             SECTION 1 — Hero
@@ -204,7 +210,7 @@ export default function Overlay() {
               initial={{ opacity: 0, y: 50, filter: "blur(12px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="text-5xl sm:text-7xl font-black tracking-tighter text-white md:text-9xl lg:text-[12rem] leading-[0.85] select-none break-words"
+              className="text-4xl sm:text-7xl font-black tracking-tighter text-white md:text-9xl lg:text-[12rem] leading-[0.85] select-none break-words"
             >
               KRISH<br />BOHRA<span className="text-blue-500">.</span>
             </motion.h1>
@@ -215,14 +221,14 @@ export default function Overlay() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-              className="mt-8 text-xl font-light tracking-[0.45em] text-white/35 sm:text-2xl uppercase"
+              className="mt-6 text-base font-light tracking-[0.3em] text-white/35 sm:text-2xl uppercase"
             >
               Creative Web Developer
             </motion.p>
           </motion.div>
 
-          {/* CTA buttons on Hero + Now Playing alignment fix */}
-          <div className="mt-16 flex flex-col items-center gap-12 sm:gap-16">
+          {/* CTA buttons */}
+          <div className="mt-12 flex flex-col items-center gap-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -231,129 +237,106 @@ export default function Overlay() {
             >
               <RippleButton 
                 onClick={scrollToProjects}
-                className="flex items-center gap-2 rounded-full bg-blue-600 px-7 py-3.5 text-sm font-bold text-white shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:shadow-[0_0_40px_rgba(37,99,235,0.7)] transition-shadow duration-300"
+                className="flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-xs md:text-sm font-bold text-white shadow-[0_0_30px_rgba(37,99,235,0.3)] hover:shadow-[0_0_40px_rgba(37,99,235,0.5)] transition-shadow duration-300"
               >
-                View Projects <ArrowRight className="w-4 h-4" />
+                Projects <ArrowRight className="w-4 h-4" />
               </RippleButton>
               <RippleButton 
                 onClick={scrollToContact}
-                className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md hover:border-white/30 hover:bg-white/10 transition-colors duration-300"
+                className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-xs md:text-sm font-bold text-white backdrop-blur-md"
               >
-                Contact Me <Mail className="w-4 h-4" />
+                Contact <Mail className="w-4 h-4" />
               </RippleButton>
             </motion.div>
 
-            {/* Now Playing - Integrated into the hero flow for better alignment */}
+            {/* Now Playing */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 1 }}
-              className="flex items-center gap-4 border border-white/5 bg-black/25 px-6 py-3 backdrop-blur-xl rounded-2xl"
+              className="flex items-center gap-4 border border-white/5 bg-black/20 px-5 py-2.5 backdrop-blur-xl rounded-2xl"
             >
-              <div className="flex gap-1.5 items-end h-5">
+              <div className="flex gap-1 items-end h-4">
                 {[0.4, 0.7, 0.3, 0.9, 0.5, 0.8].map((h, i) => (
                   <motion.div
                     key={i}
                     animate={{ height: ["20%", "100%", "20%"] }}
                     transition={{ duration: 0.5 + i * 0.1, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-1.5 bg-blue-500/60 rounded-full"
+                    className="w-1 bg-blue-500/50 rounded-full"
                     style={{ height: `${h * 100}%` }}
                   />
                 ))}
               </div>
-              <p className="text-[10px] sm:text-xs font-semibold tracking-wider text-white/50 flex items-center gap-2 uppercase">
-                <Headphones className="w-3.5 h-3.5 text-blue-400" /> Currently crafting to Lofi Beats
+              <p className="text-[10px] font-semibold tracking-wider text-white/40 uppercase">
+                Currently crafting to Lofi Beats
               </p>
             </motion.div>
           </div>
         </motion.div>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION 2 — Bio & Education  (scroll storytelling)
+            SECTION 2 — Bio & Education
         ══════════════════════════════════════════════════════ */}
         <motion.div
           style={{ opacity: opacity2, y: y2, filter: blur2, scale: scaleCards }}
-          className="sticky top-0 flex flex-col lg:flex-row min-h-[100dvh] w-full items-center justify-center lg:justify-between px-4 sm:px-12 md:px-24 gap-4 lg:gap-8 overflow-hidden"
+          className="sticky top-0 flex flex-col lg:flex-row min-h-[100dvh] w-full items-center justify-center px-4 sm:px-12 md:px-24 gap-4 lg:gap-12 overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/20 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/10 to-transparent pointer-events-none" />
 
-          {/* ── Left Bio Card: appears first ── */}
-          <motion.div style={{ opacity: opacityBio, x: xLeft }} className="w-full lg:w-auto mt-16 md:mt-0">
-            <TiltCard className="pointer-events-auto group relative flex-1 w-full lg:max-w-md rounded-[2rem] lg:rounded-[2.5rem] p-6 lg:p-10 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden"
-              style={{ background: "rgba(14, 22, 50, 0.45)", backdropFilter: "blur(30px)" } as React.CSSProperties}
-            >
-              {/* Deep inner glow */}
-              <div className="absolute -inset-x-20 -top-20 h-48 bg-blue-600/15 blur-[120px] transition-all duration-700 group-hover:opacity-100 opacity-60" />
-              <div className="absolute -inset-x-20 -bottom-20 h-32 bg-indigo-600/10 blur-[100px]" />
-
+          {/* ── Left Bio Card ── */}
+          <motion.div style={{ opacity: opacityBio, x: xLeft }} className="w-full lg:w-auto mt-4 lg:mt-0 max-w-lg">
+            <TiltCard className="pointer-events-auto group relative w-full rounded-[2rem] p-6 lg:p-10 border border-white/10 bg-slate-900/40 backdrop-blur-3xl shadow-2xl overflow-hidden">
+              <div className="absolute -inset-x-20 -top-20 h-48 bg-blue-600/10 blur-[100px]" />
+              
               <div className="relative z-10">
-                <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.35em] text-blue-400 mb-3 lg:mb-5 flex items-center gap-2">
-                  <span className="h-px w-6 lg:w-8 bg-gradient-to-r from-blue-500 to-transparent" /> Background
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-400 mb-4 flex items-center gap-2">
+                  <span className="h-px w-6 bg-gradient-to-r from-blue-500 to-transparent" /> Background
                 </p>
 
-                {/* Bold hero text */}
-                <h2 className="text-sm lg:text-2xl font-black tracking-tight text-white/90 mb-1 uppercase">BSc-IT Graduate</h2>
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.1] tracking-tighter text-white xl:text-5xl">
-                  Elevating Digital<br />
-                  <span className="text-white/25">Experiences.</span>
-                </h3>
+                <h2 className="text-xl lg:text-3xl font-bold leading-tight tracking-tighter text-white">
+                  BSc-IT Graduate<br />
+                  <span className="text-white/30">Elevating Digital Experiences.</span>
+                </h2>
 
-                <p className="mt-4 lg:mt-7 text-xs sm:text-sm lg:text-base leading-relaxed text-white/50 font-light hidden sm:block">
+                <p className="mt-4 text-xs lg:text-base leading-relaxed text-white/50 font-light lowercase">
                   Specializing in <Keyword>WordPress</Keyword> ecosystems and full-stack architecture.
                   Bridging the gap between <Keyword>JavaScript</Keyword> and scalable <Keyword>.NET</Keyword> / <Keyword>PHP</Keyword> backends.
                 </p>
 
-                <div className="mt-6 lg:mt-10 flex flex-wrap gap-2 lg:gap-4">
-                  <RippleButton 
-                    onClick={scrollToProjects}
-                    className="group/btn flex items-center gap-2 rounded-full bg-white px-4 lg:px-6 py-2 lg:py-3 text-[10px] lg:text-sm font-bold text-black shadow-[0_0_20px_rgba(255,255,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-shadow"
-                  >
-                    View Projects <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4 transition-transform group-hover/btn:translate-x-1" />
-                  </RippleButton>
-                  <RippleButton className="flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 lg:px-6 py-2 lg:py-3 text-[10px] lg:text-sm font-bold text-white backdrop-blur-md hover:border-white/25 hover:bg-white/8 transition-all">
-                    Resume <Download className="w-3 h-3 lg:w-4 lg:h-4" />
+                <div className="mt-8 flex gap-3">
+                  <RippleButton className="rounded-full bg-white px-5 py-2 text-[10px] lg:text-xs font-bold text-black">
+                    Resume
                   </RippleButton>
                 </div>
               </div>
             </TiltCard>
           </motion.div>
 
-          {/* ── Right Education Card: appears slightly after ── */}
-          <motion.div style={{ opacity: opacityEdu, x: xRight }} className="block w-full lg:w-auto">
-            <TiltCard className="pointer-events-auto group relative flex-1 w-full lg:max-w-lg rounded-[2rem] lg:rounded-[2.5rem] p-6 lg:p-10 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.5)] overflow-hidden"
-              style={{ background: "rgba(14, 22, 50, 0.35)", backdropFilter: "blur(20px)" } as React.CSSProperties}
-            >
-              <div className="absolute -inset-x-20 -bottom-20 h-48 bg-blue-700/10 blur-[120px] transition-all duration-700 group-hover:opacity-100 opacity-50" />
-              <div className="absolute -inset-x-20 -top-20 h-32 bg-cyan-600/8 blur-[100px]" />
-
+          {/* ── Right Education Card ── */}
+          <motion.div style={{ opacity: opacityEdu, x: xRight }} className="w-full lg:w-auto max-w-lg">
+            <TiltCard className="pointer-events-auto group relative w-full rounded-[2rem] p-6 lg:p-10 border border-white/10 bg-slate-900/30 backdrop-blur-3xl shadow-2xl overflow-hidden">
+              <div className="absolute -inset-x-20 -bottom-20 h-48 bg-blue-900/10 blur-[100px]" />
+              
               <div className="relative z-10">
-                <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.35em] text-blue-400 mb-3 lg:mb-5 flex items-center gap-2">
-                  <span className="h-px w-6 lg:w-8 bg-gradient-to-r from-blue-500 to-transparent" /> Education
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-400 mb-4 flex items-center gap-2">
+                  <span className="h-px w-6 bg-gradient-to-r from-blue-500 to-transparent" /> Education
                 </p>
-                <div className="flex items-start gap-4 lg:gap-6">
-                  <div className="relative mt-2 h-12 lg:h-16 w-px bg-gradient-to-b from-blue-500 via-blue-500/50 to-transparent flex-shrink-0">
-                    <div className="absolute -left-1.5 top-0 h-3 w-3 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(37,99,235,0.9)]" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-white uppercase tracking-tight leading-tight xl:text-5xl">
-                      SOMAIYA<br />UNIVERSITY
-                    </h2>
-                    <div className="mt-2 lg:mt-4 inline-block rounded-md lg:rounded-lg bg-blue-500/10 px-2 lg:px-3 py-1 lg:py-1.5 border border-blue-500/20">
-                      <p className="text-blue-400 font-bold text-xs lg:text-lg tracking-widest">2024 — 2027</p>
-                    </div>
-                    <p className="mt-4 lg:mt-6 text-white/40 text-[10px] lg:text-sm font-medium tracking-wide leading-relaxed hidden sm:block">
-                      Focusing on advanced computing, software engineering, and emerging web standards.
-                    </p>
+                
+                <h2 className="text-xl lg:text-3xl font-black text-white uppercase tracking-tight">
+                  SOMAIYA UNIVERSITY
+                </h2>
+                <p className="text-blue-400 font-bold text-xs lg:text-sm tracking-widest mt-1">2024 — 2027</p>
 
-                    {/* Tech Keywords */}
-                    <div className="mt-4 lg:mt-6 flex flex-wrap gap-1.5 lg:gap-2">
-                      {["HTML", "JavaScript", ".NET", "PHP", "React", "Next.js"].map((tech) => (
-                        <span key={tech} className="px-2 lg:px-3 py-1 rounded-md text-[9px] lg:text-xs font-bold text-blue-300/80 border border-blue-500/20 bg-blue-500/5 tracking-wide hover:bg-blue-500/10 hover:border-blue-400/40 transition-colors">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                <p className="mt-4 text-[10px] lg:text-xs text-white/40 font-medium">
+                  Focusing on advanced computing, software engineering, and emerging web standards.
+                </p>
+
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {["Next.js", "React", ".NET", "PHP"].map((tech) => (
+                    <span key={tech} className="px-2 py-1 rounded-md text-[9px] font-bold text-blue-300/60 border border-blue-500/10 bg-blue-500/5">
+                      {tech}
+                    </span>
+                  ))}
                 </div>
               </div>
             </TiltCard>
@@ -361,48 +344,36 @@ export default function Overlay() {
         </motion.div>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION 3 — Philosophy + CTA
+            SECTION 3 — Philosophy
         ══════════════════════════════════════════════════════ */}
         <motion.div
           style={{ opacity: opacity3, y: y3, filter: blur3 }}
           className="sticky top-0 flex min-h-[100dvh] w-full items-center justify-center lg:justify-end px-4 sm:px-[10vw]"
         >
-          <div className="absolute inset-0 bg-gradient-to-l from-black/65 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-transparent to-transparent pointer-events-none" />
 
-          <motion.div style={{ x: xRightSection3 }} className="w-full lg:w-auto">
-            <TiltCard className="pointer-events-auto group relative w-full lg:max-w-2xl rounded-[2rem] lg:rounded-[2.5rem] p-8 lg:p-12 border border-white/10 text-center lg:text-right shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden"
-              style={{ background: "rgba(20, 14, 40, 0.45)", backdropFilter: "blur(30px)" } as React.CSSProperties}
-            >
-              <div className="absolute -inset-x-20 -top-20 h-48 bg-purple-600/12 blur-[120px] transition-all duration-700 group-hover:opacity-100 opacity-60" />
-              <div className="absolute -inset-x-20 -bottom-20 h-32 bg-violet-500/8 blur-[100px]" />
+          <motion.div style={{ x: xRightSection3 }} className="w-full lg:w-auto max-w-xl">
+            <TiltCard className="pointer-events-auto group relative w-full rounded-[2.5rem] p-8 lg:p-12 border border-white/10 bg-slate-900/40 backdrop-blur-3xl text-center lg:text-right shadow-2xl overflow-hidden">
+              <div className="absolute -inset-x-20 -top-20 h-48 bg-purple-600/10 blur-[120px]" />
 
               <div className="relative z-10">
-                <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.35em] text-purple-400 mb-3 lg:mb-5 flex items-center justify-center lg:justify-end gap-2">
-                  Philosophy <span className="h-px w-6 lg:w-8 bg-gradient-to-l from-purple-500 to-transparent" />
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-purple-400 mb-4 flex items-center justify-center lg:justify-end gap-2">
+                  Philosophy <span className="h-px w-6 bg-gradient-to-l from-purple-500 to-transparent" />
                 </p>
-                <h2 className="text-3xl lg:text-4xl font-bold leading-tight tracking-tighter text-white sm:text-6xl text-balance">
+                <h2 className="text-3xl lg:text-5xl font-bold leading-tight tracking-tighter text-white">
                   Clean Code.<br />
-                  <span className="text-white/25">Meaningful UX.</span>
+                  <span className="text-white/20">Meaningful UX.</span>
                 </h2>
-                <p className="mt-4 lg:mt-8 text-sm lg:text-lg leading-relaxed text-white/45 font-light text-balance">
-                  I build digital solutions that prioritize{" "}
-                  <Keyword>performance</Keyword> without sacrificing{" "}
-                  <Keyword>aesthetics</Keyword>. Eager to contribute to forward-thinking teams with a passion for polished, user-centric design.
+                <p className="mt-6 text-sm lg:text-lg leading-relaxed text-white/40 font-light">
+                  I build digital solutions that prioritize performance without sacrificing aesthetics.
                 </p>
 
-                {/* Dual CTAs */}
-                <div className="mt-6 lg:mt-10 flex flex-wrap justify-center lg:justify-end gap-3 lg:gap-4">
+                <div className="mt-10 flex flex-wrap justify-center lg:justify-end gap-4">
                   <RippleButton 
                     onClick={scrollToContact}
-                    className="group/mail flex items-center gap-2 rounded-full bg-purple-600 px-6 lg:px-8 py-3 text-xs lg:text-sm font-bold text-white shadow-[0_0_30px_rgba(147,51,234,0.4)] hover:shadow-[0_0_45px_rgba(147,51,234,0.7)] transition-shadow duration-300"
+                    className="rounded-full bg-purple-600 px-8 py-3 text-xs lg:text-sm font-bold text-white shadow-xl shadow-purple-900/20"
                   >
-                    Let&apos;s Talk <Mail className="w-3 h-3 lg:w-4 lg:h-4 transition-transform group-hover/mail:rotate-12" />
-                  </RippleButton>
-                  <RippleButton 
-                    onClick={scrollToProjects}
-                    className="group/ext flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-6 lg:px-8 py-3 text-xs lg:text-sm font-bold text-white hover:bg-purple-500/20 hover:border-purple-400/50 transition-all duration-300"
-                  >
-                    View Work <ExternalLink className="w-3 h-3 lg:w-4 lg:h-4 transition-transform group-hover/ext:-translate-y-0.5 group-hover/ext:translate-x-0.5" />
+                    Let&apos;s Talk
                   </RippleButton>
                 </div>
               </div>

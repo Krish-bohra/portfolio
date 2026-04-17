@@ -11,7 +11,7 @@ export default function Home() {
         This section is relative so the absolutely-positioned Overlay 
         sits perfectly on top of the ScrollyCanvas.
       */}
-      <section id="hero-section" className="relative h-[500vh]">
+      <section id="hero-section" className="relative h-[800vh]">
         <ScrollyCanvas />
         <Overlay />
       </section>

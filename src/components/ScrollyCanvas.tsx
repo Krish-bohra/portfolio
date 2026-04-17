@@ -4,8 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent, useSpring } from "framer-motion";
 
 export default function ScrollyCanvas() {
+  const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { scrollYProgress } = useScroll();
+
+  useEffect(() => {
+    setContainerRef(document.getElementById("hero-section"));
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef ? { current: containerRef } : undefined,
+    offset: ["start start", "end end"]
+  });
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstFrameLoaded, setIsFirstFrameLoaded] = useState(false);
@@ -159,7 +168,7 @@ export default function ScrollyCanvas() {
   };
 
   return (
-    <div className="relative h-[500vh]">
+    <div className="h-full">
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#121212]">
         
         {/* Loading Overlay */}
