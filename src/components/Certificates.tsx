@@ -69,159 +69,75 @@ export default function Certificates() {
   useGSAP(() => {
     if (!containerRef.current) return;
 
-    if (isMobile) {
-      // MOBILE: Pinned Swipe logic
-      cardsRef.current.forEach((card, i) => {
-        if (!card) return;
-        gsap.set(card, {
-          xPercent: i === 0 ? 0 : 100,
-          opacity: i === 0 ? 1 : 0,
-          scale: i === 0 ? 1 : 0.85,
-          zIndex: 50 - i
-        });
+    // Reset states for all cards first
+    cardsRef.current.forEach((card, i) => {
+      if (!card) return;
+      gsap.set(card, { 
+        xPercent: i === 0 ? 0 : 100, 
+        opacity: i === 0 ? 1 : 0, 
+        scale: i === 0 ? 1 : 0.9,
+        rotateY: 0,
+        filter: "blur(0px)",
+        zIndex: 50 - i 
       });
+    });
 
-      let animating = false;
-
-      const gotoSection = (index: number, direction: number) => {
-        if (animating || index < 0 || index >= certificates.length) return;
-        animating = true;
-
-        const currentCard = cardsRef.current[currentIndex];
-        const nextCard = cardsRef.current[index];
-
-        const tl = gsap.timeline({
-          onComplete: () => {
-            animating = false;
-            setCurrentIndex(index);
-          }
-        });
-
-        if (currentCard) {
-          tl.to(currentCard, {
-            xPercent: direction > 0 ? -100 : 100,
-            opacity: 0,
-            scale: 0.85,
-            duration: 0.7,
-            ease: "expo.out"
-          }, 0);
-        }
-
-        if (nextCard) {
-          gsap.set(nextCard, { 
-            xPercent: direction > 0 ? 100 : -100, 
-            opacity: 0, 
-            scale: 0.85,
-            zIndex: 60
-          });
-          tl.to(nextCard, {
-            xPercent: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.7,
-            ease: "expo.out"
-          }, 0);
-        }
-      };
-
-      // Persistent Pin
-      const pin = ScrollTrigger.create({
+    const tl = gsap.timeline({
+      scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: "+=3500", // Long enough to handle swiping
+        end: `+=${certificates.length * 1200}`, // Slightly longer for more hold time
+        scrub: 1,
         pin: true,
         anticipatePin: 1,
-      });
-
-      const observer = Observer.create({
-        target: containerRef.current,
-        type: "wheel,touch,pointer",
-        onUp: () => {
-          if (currentIndex > 0) gotoSection(currentIndex - 1, -1);
-        },
-        onDown: () => {
-          if (currentIndex < certificates.length - 1) {
-            gotoSection(currentIndex + 1, 1);
+        onUpdate: (self) => {
+          const progress = self.progress;
+          const newIndex = Math.min(
+            Math.floor(progress * certificates.length),
+            certificates.length - 1
+          );
+          if (newIndex !== currentIndex) {
+            setCurrentIndex(newIndex);
           }
-        },
-        onLeft: () => gotoSection(currentIndex + 1, 1),
-        onRight: () => gotoSection(currentIndex - 1, -1),
-        tolerance: 50,
-        preventDefault: true
-      });
-
-      return () => {
-        pin.kill();
-        observer.kill();
-      };
-
-    } else {
-      // DESKTOP: Smooth 3D Scrub
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return;
-        // Reset states for desktop
-        gsap.set(card, { xPercent: 0, y: 0, scale: 1, filter: "blur(0px)", z: 0 });
-        if (index === 0) {
-          gsap.set(card, { rotateY: 0, opacity: 1, zIndex: 50 });
-        } else {
-          gsap.set(card, { rotateY: 90, opacity: 0, zIndex: 50 - index });
         }
-      });
+      },
+    });
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "+=5000", // Even more space for smoothness
-          scrub: 2.5, // High damping for premium feel
-          pin: true,
-          anticipatePin: 1,
-        },
-      });
+    certificates.forEach((_, index) => {
+      const currentCard = cardsRef.current[index];
+      const nextCard = cardsRef.current[index + 1];
 
-      certificates.forEach((_, index) => {
-        const currentCard = cardsRef.current[index];
-        const nextCard = cardsRef.current[index + 1];
+      if (index < certificates.length - 1 && currentCard && nextCard) {
+        // Hold the current card for a moment
+        tl.to({}, { duration: 0.5 });
 
-        tl.to({}, { duration: 0.4 }); // Initial hold
+        // Transition: Current card slides out, next card slides in
+        tl.to(currentCard, {
+          xPercent: -100,
+          opacity: 0,
+          scale: 0.9,
+          filter: "blur(10px)",
+          duration: 1,
+          ease: "power2.inOut"
+        });
 
-        if (index < certificates.length - 1 && currentCard && nextCard) {
-          tl.to(
-            currentCard,
-            {
-              rotateY: -90,
-              scale: 0.75,
-              opacity: 0,
-              z: -800,
-              filter: "blur(15px)",
-              duration: 2,
-              ease: "power2.inOut",
-            },
-            `transition-${index}`
-          );
+        tl.to(nextCard, {
+          xPercent: 0,
+          opacity: 1,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 1,
+          ease: "power2.inOut"
+        }, "<"); // Start simultaneously
+      }
+    });
 
-          tl.to(
-            nextCard,
-            {
-              rotateY: 0,
-              scale: 1,
-              opacity: 1,
-              z: 0,
-              filter: "blur(0px)",
-              duration: 2,
-              ease: "power2.inOut",
-            },
-            `transition-${index}`
-          );
-          
-          tl.to({}, { duration: 0.4 }); // Hold card
-        }
-      });
+    // Final hold for the last card
+    tl.to({}, { duration: 0.5 });
 
-      return () => {
-        ScrollTrigger.getAll().forEach(t => t.kill());
-      };
-    }
+    return () => {
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
   }, { scope: containerRef, dependencies: [isMobile] });
 
   return (
