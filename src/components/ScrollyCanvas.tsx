@@ -4,17 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent, useSpring } from "framer-motion";
 
 export default function ScrollyCanvas() {
-  const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    setContainerRef(document.getElementById("hero-section"));
-  }, []);
-
-  const { scrollYProgress } = useScroll({
-    target: containerRef ? { current: containerRef } : undefined,
-    offset: ["start start", "end end"]
-  });
+  const { scrollYProgress } = useScroll();
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstFrameLoaded, setIsFirstFrameLoaded] = useState(false);
