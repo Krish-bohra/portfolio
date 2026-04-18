@@ -350,35 +350,57 @@ export default function Overlay() {
         </motion.div>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION 3 — Philosophy
+            SECTION 3 — Technical Arsenal (Skills)
         ══════════════════════════════════════════════════════ */}
         <motion.div
           style={{ opacity: opacity3, y: y3, filter: blur3 }}
           className="sticky top-0 flex min-h-[100dvh] w-full items-center justify-center lg:justify-end px-4 sm:px-[10vw]"
         >
-          <div className="absolute inset-0 bg-gradient-to-l from-black/65 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-black/20 to-transparent pointer-events-none" />
 
           <motion.div style={{ x: xRightSection3 }} className="w-full lg:w-auto">
-            <TiltCard className="pointer-events-auto group relative w-full lg:max-w-2xl rounded-[2.5rem] p-8 lg:p-12 border border-white/10 text-center lg:text-right shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden"
-              style={{ background: isMobile ? "rgba(10, 15, 30, 0.95)" : "rgba(20, 14, 40, 0.45)", backdropFilter: isMobile ? "none" : "blur(30px)" } as React.CSSProperties}
+            <TiltCard 
+              className="pointer-events-auto group relative w-full lg:max-w-2xl rounded-[3rem] p-6 sm:p-10 lg:p-12 border border-white/10 text-center lg:text-right shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden bg-[#0A0515]/90 sm:bg-[#140e28]/40 backdrop-blur-xl sm:backdrop-blur-3xl"
             >
-              <div className="relative z-10">
-                <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.35em] text-purple-400 mb-5 flex items-center justify-center lg:justify-end gap-2">
-                  Philosophy <span className="h-px w-8 bg-gradient-to-l from-purple-500 to-transparent" />
+              {/* Internal glow fx */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 pointer-events-none" />
+              <div className="absolute -inset-x-20 -top-20 h-48 bg-purple-600/20 blur-[120px] opacity-60 pointer-events-none" />
+
+              <div className="relative z-10 w-full">
+                <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.35em] text-purple-400 mb-4 flex items-center justify-center lg:justify-end gap-2">
+                  Technical Arsenal <span className="h-px w-8 bg-gradient-to-l from-purple-500 to-transparent" />
                 </p>
-                <h2 className="text-3xl lg:text-4xl font-bold leading-tight tracking-tighter text-white sm:text-6xl text-balance">
-                  Clean Code.<br />
-                  <span className="text-white/25">Meaningful UX.</span>
+                <h2 className="text-3xl lg:text-5xl font-black leading-tight tracking-tighter text-white sm:text-6xl text-balance">
+                  Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Toolkit.</span>
                 </h2>
-                <p className="mt-8 text-sm lg:text-lg leading-relaxed text-white/45 font-light text-balance">
-                  I build digital solutions that prioritize performance without sacrificing aesthetics. Eager to contribute to forward-thinking teams with a passion for polished, user-centric design.
-                </p>
-                <div className="mt-10 flex flex-wrap justify-center lg:justify-end gap-4">
+
+                <div className="mt-8 lg:mt-12 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 w-full">
+                  {[
+                    { name: 'HTML', color: 'from-orange-500/20 to-orange-500/5', border: 'border-orange-500/20', text: 'text-orange-300' },
+                    { name: 'CSS', color: 'from-blue-500/20 to-blue-500/5', border: 'border-blue-500/20', text: 'text-blue-300' },
+                    { name: 'JavaScript', color: 'from-yellow-400/20 to-yellow-400/5', border: 'border-yellow-400/20', text: 'text-yellow-300' },
+                    { name: 'PHP', color: 'from-indigo-500/20 to-indigo-500/5', border: 'border-indigo-500/20', text: 'text-indigo-300' },
+                    { name: 'MongoDB', color: 'from-emerald-500/20 to-emerald-500/5', border: 'border-emerald-500/20', text: 'text-emerald-300' },
+                    { name: 'WordPress', color: 'from-cyan-500/20 to-cyan-500/5', border: 'border-cyan-500/20', text: 'text-cyan-300' },
+                  ].map((skill) => (
+                    <div 
+                      key={skill.name} 
+                      className={`group/skill relative overflow-hidden flex flex-col items-center justify-center py-4 lg:py-5 rounded-2xl bg-gradient-to-b ${skill.color} border ${skill.border} shadow-[0_4px_30px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-md`}
+                    >
+                      <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/skill:opacity-100 transition-opacity duration-300" />
+                      <span className={`relative z-10 text-[11px] lg:text-sm font-black tracking-widest uppercase ${skill.text} drop-shadow-md`}>
+                        {skill.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-10 flex justify-center lg:justify-end">
                   <RippleButton 
                     onClick={scrollToContact}
-                    className="rounded-full bg-purple-600 px-8 py-3 text-sm font-bold text-white shadow-xl shadow-purple-900/40"
+                    className="flex items-center gap-3 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 lg:px-8 lg:py-4 text-xs lg:text-sm font-bold text-white shadow-[0_0_30px_rgba(147,51,234,0.3)] hover:shadow-[0_0_50px_rgba(147,51,234,0.5)] transition-all"
                   >
-                    Let&apos;s Talk <Mail className="w-4 h-4" />
+                    Start a Project <Mail className="w-4 h-4" />
                   </RippleButton>
                 </div>
               </div>
