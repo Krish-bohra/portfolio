@@ -132,36 +132,36 @@ export default function Overlay() {
   // Hero ends at ~0.66 progress.
   // Section 1: Hero (0 -> 0.3)
   const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 1, 0]);
-  const blur1    = useTransform(scrollYProgress, [0, 0.2, 0.3], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(0px)", "blur(0px)", "blur(12px)"]);
+  const blur1    = useTransform(scrollYProgress, [0, 0.2, 0.3], ["blur(0px)", "blur(0px)", "blur(12px)"]);
 
   // Section 2: Bio & Edu (0.3 -> 0.7)
   const opacity2 = useTransform(scrollYProgress, [0.32, 0.38, 0.62, 0.68], [0, 1, 1, 0]);
-  const blur2    = useTransform(scrollYProgress, [0.32, 0.38, 0.62, 0.68], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(12px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
+  const blur2    = useTransform(scrollYProgress, [0.32, 0.38, 0.62, 0.68], ["blur(12px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
 
   // Section 3: Philosophy (0.7 -> 1.0)
   const opacity3 = useTransform(scrollYProgress, [0.72, 0.8, 1], [0, 1, 1]);
-  const blur3    = useTransform(scrollYProgress, [0.72, 0.8, 1], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(12px)", "blur(0px)", "blur(0px)"]);
+  const blur3    = useTransform(scrollYProgress, [0.72, 0.8, 1], ["blur(12px)", "blur(0px)", "blur(0px)"]);
 
   // Y parallax
-  const y1 = useTransform(scrollYProgress, [0, 0.3],    isMobile ? [0, -30] : [0, -80]);
-  const y2 = useTransform(scrollYProgress, [0.32, 0.68], isMobile ? [30, -30] : [80, -80]);
-  const y3 = useTransform(scrollYProgress, [0.72, 1],    [80, 0]);
+  const y1 = useTransform(scrollYProgress, [0, 0.3], [0, -30]);
+  const y2 = useTransform(scrollYProgress, [0.32, 0.68], [80, -80]);
+  const y3 = useTransform(scrollYProgress, [0.72, 1], [80, 0]);
 
   // Section 2 staggered elements
   const opacityBio  = useTransform(scrollYProgress, [0.32, 0.4, 0.62, 0.68], [0, 1, 1, 0]);
   const opacityEdu  = useTransform(scrollYProgress, [0.35, 0.45, 0.62, 0.68], [0, 1, 1, 0]);
 
   // Cinematic X slides
-  const xLeft          = useTransform(scrollYProgress, [0.32, 0.4, 0.62, 0.68], isMobile ? [-20, 0, 0, -20] : [-80, 0, 0, -80]);
-  const xRight         = useTransform(scrollYProgress, [0.35, 0.45, 0.62, 0.68], isMobile ? [20, 0, 0, 20] : [80, 0, 0, 80]);
-  const xRightSection3 = useTransform(scrollYProgress, [0.72, 0.82, 1], isMobile ? [0, 0, 0] : [80, 0, 0]);
+  const xLeft          = useTransform(scrollYProgress, [0.32, 0.4, 0.62, 0.68], [-40, 0, 0, -40]);
+  const xRight         = useTransform(scrollYProgress, [0.35, 0.45, 0.62, 0.68], [40, 0, 0, 40]);
+  const xRightSection3 = useTransform(scrollYProgress, [0.72, 0.82, 1], [40, 0, 0]);
 
   const heroTextY     = useTransform(scrollYProgress, [0, 0.25], [0, -40]);
   const heroBadgeY    = useTransform(scrollYProgress, [0, 0.25], [0, -120]);
   const heroSubtitleY = useTransform(scrollYProgress, [0, 0.25], [40, 0]);
   const heroRotate    = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
 
-  const scaleBase  = useTransform(scrollYProgress, [0.32, 0.38, 0.62, 0.68], isMobile ? [0.98, 1, 1, 0.98] : [0.9, 1, 1, 0.9]);
+  const scaleBase  = useTransform(scrollYProgress, [0.32, 0.38, 0.62, 0.68], [0.95, 1, 1, 0.95]);
   const scaleCards = useSpring(scaleBase, { stiffness: 80, damping: 20 });
 
   // Breathing animation for the canvas zoom (referenced in ScrollyCanvas, kept here for reference)
