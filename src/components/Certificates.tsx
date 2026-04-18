@@ -86,14 +86,21 @@ export default function Certificates() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${certificates.length * 1200}`, // Slightly longer for more hold time
+        end: `+=${certificates.length * 1000}`, // Slightly shorter more responsive
         scrub: 1,
         pin: true,
         anticipatePin: 1,
+        snap: {
+          snapTo: 1 / (certificates.length),
+          duration: { min: 0.2, max: 0.5 },
+          delay: 0.1,
+          ease: "power1.inOut"
+        },
         onUpdate: (self) => {
           const progress = self.progress;
+          // Calculate index more accurately based on timeline sections
           const newIndex = Math.min(
-            Math.floor(progress * certificates.length),
+            Math.floor(progress * (certificates.length)),
             certificates.length - 1
           );
           if (newIndex !== currentIndex) {
@@ -136,7 +143,9 @@ export default function Certificates() {
     tl.to({}, { duration: 0.5 });
 
     return () => {
-      ScrollTrigger.getAll().forEach(t => t.kill());
+      // Unregister only this timeline's scrollTrigger
+      if (tl.scrollTrigger) tl.scrollTrigger.kill();
+      tl.kill();
     };
   }, { scope: containerRef, dependencies: [isMobile] });
 
@@ -182,7 +191,7 @@ export default function Certificates() {
               ref={(el) => {
                 cardsRef.current[index] = el;
               }}
-              className="absolute flex w-[90vw] max-w-4xl flex-col overflow-hidden rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md pointer-events-auto min-h-[50vh] md:h-[60vh] md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] [transform-style:preserve-3d]"
+              className="absolute flex w-[92vw] max-w-4xl flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 backdrop-blur-md pointer-events-auto min-h-[65vh] md:h-[60vh] md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] [transform-style:preserve-3d]"
             >
               {/* Background Glow */}
               <div
@@ -274,7 +283,7 @@ export default function Certificates() {
                   </div>
                 </div>
                 {/* Info Section */}
-                <div className="flex-1 p-8 md:p-12 flex flex-col justify-center bg-black/60 backdrop-blur-xl">
+                <div className="flex-1 p-8 md:p-12 flex flex-col justify-center bg-black/60 backdrop-blur-xl overflow-y-auto">
                   <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-3xl border border-white/10 bg-white/5 shadow-2xl">
                     {selectedCert.icon}
                   </div>

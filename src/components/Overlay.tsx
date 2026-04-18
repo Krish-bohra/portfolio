@@ -102,7 +102,14 @@ function Keyword({ children }: { children: React.ReactNode }) {
 // ─── Main Overlay ───────────────────────────────────────────────────────────────
 // ─── Main Overlay ───────────────────────────────────────────────────────────────
 export default function Overlay() {
-  const { scrollYProgress } = useScroll();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const scrollToProjects = () => {
     const el = document.getElementById("projects");
@@ -114,40 +121,47 @@ export default function Overlay() {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
   // Hero is 800vh. We map scroll progress (0 to 1 of entire page)
   // Assuming page is roughly 1200vh total (800 hero + 400 certs/projects/etc).
   // Hero ends at ~0.66 progress.
-  const opacity1 = useTransform(scrollYProgress, [0, 0.1, 0.2], [1, 1, 0]);
-  const blur1    = useTransform(scrollYProgress, [0, 0.1, 0.2], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(0px)", "blur(0px)", "blur(8px)"]);
+  // Section 1: Hero (0 -> 0.3)
+  const opacity1 = useTransform(scrollYProgress, [0, 0.2, 0.3], [1, 1, 0]);
+  const blur1    = useTransform(scrollYProgress, [0, 0.2, 0.3], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(0px)", "blur(0px)", "blur(12px)"]);
 
-  const opacity2 = useTransform(scrollYProgress, [0.22, 0.28, 0.45, 0.55], [0, 1, 1, 0]);
-  const blur2    = useTransform(scrollYProgress, [0.22, 0.28, 0.45, 0.55], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)", "blur(8px)"]);
+  // Section 2: Bio & Edu (0.3 -> 0.7)
+  const opacity2 = useTransform(scrollYProgress, [0.32, 0.38, 0.62, 0.68], [0, 1, 1, 0]);
+  const blur2    = useTransform(scrollYProgress, [0.32, 0.38, 0.62, 0.68], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(12px)", "blur(0px)", "blur(0px)", "blur(12px)"]);
 
-  const opacity3 = useTransform(scrollYProgress, [0.58, 0.65, 0.75], [0, 1, 1]);
-  const blur3    = useTransform(scrollYProgress, [0.58, 0.65, 0.75], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(8px)", "blur(0px)", "blur(0px)"]);
+  // Section 3: Philosophy (0.7 -> 1.0)
+  const opacity3 = useTransform(scrollYProgress, [0.72, 0.8, 1], [0, 1, 1]);
+  const blur3    = useTransform(scrollYProgress, [0.72, 0.8, 1], isMobile ? ["blur(0px)", "blur(0px)", "blur(0px)"] : ["blur(12px)", "blur(0px)", "blur(0px)"]);
 
   // Y parallax
-  const y1 = useTransform(scrollYProgress, [0, 0.25],  isMobile ? [0, -40] : [0, -80]);
-  const y2 = useTransform(scrollYProgress, [0.22, 0.55], isMobile ? [40, -40] : [80, -80]);
-  const y3 = useTransform(scrollYProgress, [0.58, 0.75], [80, 0]);
+  const y1 = useTransform(scrollYProgress, [0, 0.3],    isMobile ? [0, -30] : [0, -80]);
+  const y2 = useTransform(scrollYProgress, [0.32, 0.68], isMobile ? [30, -30] : [80, -80]);
+  const y3 = useTransform(scrollYProgress, [0.72, 1],    [80, 0]);
 
   // Section 2 staggered elements
-  const opacityBio  = useTransform(scrollYProgress, [0.22, 0.3, 0.45, 0.55], [0, 1, 1, 0]);
-  const opacityEdu  = useTransform(scrollYProgress, [0.25, 0.35, 0.45, 0.55], [0, 1, 1, 0]);
+  const opacityBio  = useTransform(scrollYProgress, [0.32, 0.4, 0.62, 0.68], [0, 1, 1, 0]);
+  const opacityEdu  = useTransform(scrollYProgress, [0.35, 0.45, 0.62, 0.68], [0, 1, 1, 0]);
 
   // Cinematic X slides
-  const xLeft          = useTransform(scrollYProgress, [0.22, 0.28, 0.45, 0.55], isMobile ? [-40, 0, 0, -40] : [-80, 0, 0, -80]);
-  const xRight         = useTransform(scrollYProgress, [0.25, 0.35, 0.45, 0.55], isMobile ? [40, 0, 0, 40] : [80, 0, 0, 80]);
-  const xRightSection3 = useTransform(scrollYProgress, [0.58, 0.68, 1], isMobile ? [0, 0, 0] : [80, 0, 0]);
+  const xLeft          = useTransform(scrollYProgress, [0.32, 0.4, 0.62, 0.68], isMobile ? [-20, 0, 0, -20] : [-80, 0, 0, -80]);
+  const xRight         = useTransform(scrollYProgress, [0.35, 0.45, 0.62, 0.68], isMobile ? [20, 0, 0, 20] : [80, 0, 0, 80]);
+  const xRightSection3 = useTransform(scrollYProgress, [0.72, 0.82, 1], isMobile ? [0, 0, 0] : [80, 0, 0]);
 
-  const heroTextY     = useTransform(scrollYProgress, [0, 0.2], [0, -40]);
-  const heroBadgeY    = useTransform(scrollYProgress, [0, 0.2], [0, -120]);
-  const heroSubtitleY = useTransform(scrollYProgress, [0, 0.2], [40, 0]);
-  const heroRotate    = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+  const heroTextY     = useTransform(scrollYProgress, [0, 0.25], [0, -40]);
+  const heroBadgeY    = useTransform(scrollYProgress, [0, 0.25], [0, -120]);
+  const heroSubtitleY = useTransform(scrollYProgress, [0, 0.25], [40, 0]);
+  const heroRotate    = useTransform(scrollYProgress, [0, 0.25], [0, 1]);
 
-  const scaleBase  = useTransform(scrollYProgress, [0.22, 0.28, 0.45, 0.55], isMobile ? [0.95, 1, 1, 0.95] : [0.9, 1, 1, 0.9]);
+  const scaleBase  = useTransform(scrollYProgress, [0.32, 0.38, 0.62, 0.68], isMobile ? [0.98, 1, 1, 0.98] : [0.9, 1, 1, 0.9]);
   const scaleCards = useSpring(scaleBase, { stiffness: 80, damping: 20 });
 
   // Breathing animation for the canvas zoom (referenced in ScrollyCanvas, kept here for reference)
@@ -165,7 +179,7 @@ export default function Overlay() {
         }}
       />
 
-      <div className="pointer-events-none absolute left-0 top-0 z-10 w-full h-full">
+    <div ref={containerRef} className="pointer-events-none absolute left-0 top-0 z-10 w-full h-full">
 
         {/* ══════════════════════════════════════════════════════
             SECTION 1 — Hero
@@ -201,9 +215,9 @@ export default function Overlay() {
               initial={{ opacity: 0, y: 50, filter: "blur(12px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="text-5xl sm:text-7xl font-black tracking-tighter text-white md:text-9xl lg:text-[12rem] leading-[0.85] select-none break-words"
+              className="text-4xl xs:text-5xl sm:text-7xl font-black tracking-tighter text-white md:text-9xl lg:text-[12rem] leading-[0.85] select-none break-words"
             >
-              KRISH<br />BOHRA<span className="text-blue-500">.</span>
+              KRISH<br className="sm:hidden" /> {isMobile ? "" : <br />}BOHRA<span className="text-blue-500">.</span>
             </motion.h1>
 
             {/* Subtitle */}
@@ -285,7 +299,7 @@ export default function Overlay() {
                   <span className="h-px w-8 bg-gradient-to-r from-blue-500 to-transparent" /> Background
                 </p>
                 <h2 className="text-sm lg:text-2xl font-black tracking-tight text-white/90 mb-1 uppercase">BSc-IT Graduate</h2>
-                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-[1.1] tracking-tighter text-white xl:text-5xl">
+                <h3 className="text-xl sm:text-3xl lg:text-4xl font-bold leading-[1.1] tracking-tighter text-white xl:text-5xl">
                   Elevating Digital<br />
                   <span className="text-white/25">Experiences.</span>
                 </h3>

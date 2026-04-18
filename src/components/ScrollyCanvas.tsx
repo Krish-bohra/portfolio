@@ -4,12 +4,24 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent, useSpring } from "framer-motion";
 
 export default function ScrollyCanvas() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { scrollYProgress } = useScroll();
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
   const [images, setImages] = useState<HTMLImageElement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstFrameLoaded, setIsFirstFrameLoaded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const frameCount = 120;
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // ─── Scroll → Frame index (with spring for buttery smoothness) ──
   const frameIndexRaw = useTransform(scrollYProgress, [0, 1], [0, frameCount - 1]);
@@ -159,7 +171,7 @@ export default function ScrollyCanvas() {
   };
 
   return (
-    <div className="h-full">
+    <div ref={containerRef} className="h-full w-full">
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#121212]">
         
         {/* Loading Overlay */}
@@ -177,9 +189,7 @@ export default function ScrollyCanvas() {
           ref={canvasRef}
           style={{ 
             scale,
-            filter: typeof window !== 'undefined' && window.innerWidth < 768 
-              ? "none" 
-              : "contrast(1.05) brightness(0.95)"
+            filter: isMobile ? "none" : "contrast(1.05) brightness(0.95)"
           }}
           className="h-full w-full pointer-events-none"
         />

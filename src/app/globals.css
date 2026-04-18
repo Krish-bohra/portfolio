@@ -118,19 +118,33 @@ html.lenis body {
 .glass-deep  { backdrop-filter: blur(30px); background: rgba(14, 22, 50, 0.45); }
 .glass-light { backdrop-filter: blur(20px); background: rgba(14, 22, 50, 0.30); }
 
-/* Mobile Performance Optimizations */
+/* Mobile Performance & Aesthetic Optimizations */
 @media (max-width: 768px) {
-  .glass-deep, .glass-light, .backdrop-blur-md, .backdrop-blur-xl {
-    backdrop-filter: blur(4px) !important; /* Drastically reduced for performance */
-    background: rgba(14, 22, 50, 0.85) !important;
+  .glass-deep, .glass-light {
+    backdrop-filter: blur(8px) !important;
+    background: rgba(10, 15, 35, 0.88) !important;
   }
   
-  .animate-ripple, .animate-breathe, .shimmer-border {
-    animation: none !important; /* Disable heavy animations on mobile */
+  .backdrop-blur-md, .backdrop-blur-xl {
+    backdrop-filter: blur(6px) !important;
+  }
+  
+  /* Disable heavy animations but keep subtle ones */
+  .animate-ripple {
+    animation-duration: 0.4s !important;
+  }
+  
+  .animate-letter-expand {
+    animation: letter-expand 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  /* Simplify canvas effects */
-  canvas {
-    filter: none !important;
+  .shimmer-border {
+    animation: none !important;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Optimize selection color for mobile */
+  ::selection {
+    background: rgba(59, 130, 246, 0.3);
   }
 }
