@@ -360,7 +360,7 @@ export default function Overlay() {
 
           <motion.div style={{ x: xRightSection3 }} className="w-full lg:w-auto">
             <TiltCard 
-              className="pointer-events-auto group relative w-full lg:max-w-2xl rounded-[3rem] p-6 sm:p-10 lg:p-12 border border-white/10 text-center lg:text-right shadow-[0_0_80px_rgba(0,0,0,0.6)] overflow-hidden bg-[#0A0515]/90 sm:bg-[#140e28]/40 backdrop-blur-xl sm:backdrop-blur-3xl"
+              className="pointer-events-auto group relative w-full lg:max-w-2xl rounded-[20px] p-6 lg:p-10 border border-white/10 text-center lg:text-right shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden bg-gradient-to-br from-white/[0.07] to-white/[0.01] backdrop-blur-[20px]"
             >
               {/* Internal glow fx */}
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 pointer-events-none" />
@@ -385,10 +385,10 @@ export default function Overlay() {
                   ].map((skill) => (
                     <div 
                       key={skill.name} 
-                      className={`group/skill relative overflow-hidden flex flex-col items-center justify-center py-4 lg:py-5 rounded-2xl bg-gradient-to-b ${skill.color} border ${skill.border} shadow-[0_4px_30px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_40px_rgba(0,0,0,0.4)] backdrop-blur-md`}
+                      className={`group/skill relative overflow-hidden flex flex-col items-center justify-center p-4 rounded-[15px] bg-gradient-to-br from-white/[0.05] to-transparent border ${skill.border} shadow-[0_4px_24px_rgba(0,0,0,0.2)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}
                     >
-                      <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/skill:opacity-100 transition-opacity duration-300" />
-                      <span className={`relative z-10 text-[11px] lg:text-sm font-black tracking-widest uppercase ${skill.text} drop-shadow-md`}>
+                      <div className={`absolute inset-0 bg-gradient-to-b ${skill.color} opacity-0 group-hover/skill:opacity-100 transition-opacity duration-300`} />
+                      <span className={`relative z-10 text-[11px] lg:text-sm font-bold tracking-wider uppercase ${skill.text} drop-shadow-md`}>
                         {skill.name}
                       </span>
                     </div>
