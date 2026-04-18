@@ -241,12 +241,14 @@ export default function Overlay() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
               className="pointer-events-auto flex flex-col xs:flex-row items-center gap-4 w-full justify-center px-4"
             >
-              <RippleButton 
-                onClick={scrollToProjects}
-                className="flex items-center gap-2 rounded-full bg-blue-600 px-7 py-3.5 text-sm font-bold text-white shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:shadow-[0_0_40px_rgba(37,99,235,0.7)] transition-shadow duration-300"
+
+              <a
+                href="/krish-resume.pdf"
+                download="Krish_Bohra_Resume.pdf"
+                className="flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-white/90 shadow-[0_0_24px_rgba(255,255,255,0.15)] hover:shadow-[0_0_36px_rgba(255,255,255,0.3)] transition-all duration-300"
               >
-                View Projects <ArrowRight className="w-4 h-4" />
-              </RippleButton>
+                Resume <Download className="w-4 h-4" />
+              </a>
               <RippleButton 
                 onClick={scrollToContact}
                 className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md hover:border-white/30 hover:bg-white/10 transition-colors duration-300"
@@ -308,14 +310,34 @@ export default function Overlay() {
                   Specializing in <Keyword>WordPress</Keyword> ecosystems and full-stack architecture.
                   Bridging the gap between <Keyword>JavaScript</Keyword> and scalable <Keyword>.NET</Keyword> / <Keyword>PHP</Keyword> backends.
                 </p>
-                <div className="mt-4 lg:mt-10 flex flex-wrap gap-4">
-                  <RippleButton 
-                    onClick={scrollToProjects}
-                    className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 lg:px-6 lg:py-3 text-[11px] lg:text-sm font-bold text-black"
-                  >
-                    View Projects <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4" />
-                  </RippleButton>
+                <div className="mt-4 lg:mt-6 flex flex-wrap gap-3">
+                  {/* Resume button with hover preview */}
+                  <div className="group/resume relative">
+                    {/* Floating preview popup */}
+                    <div className="absolute bottom-full left-0 mb-3 w-40 lg:w-52 opacity-0 scale-95 group-hover/resume:opacity-100 group-hover/resume:scale-100 transition-all duration-300 ease-out pointer-events-none z-50 origin-bottom-left">
+                      <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.7)]">
+                        <img
+                          src="/resume-preview.png"
+                          alt="Resume Preview"
+                          className="w-full h-auto object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+                      </div>
+                      {/* Arrow */}
+                      <div className="absolute -bottom-1.5 left-6 w-3 h-3 bg-white/10 border-r border-b border-white/10 rotate-45" />
+                    </div>
+
+                    {/* Resume download button */}
+                    <a
+                      href="/krish-resume.pdf"
+                      download="Krish_Bohra_Resume.pdf"
+                      className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 lg:px-6 lg:py-3 text-[11px] lg:text-sm font-bold text-black hover:bg-white/90 transition-colors duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                    >
+                      Resume <Download className="w-3 h-3 lg:w-4 lg:h-4" />
+                    </a>
+                  </div>
                 </div>
+
               </div>
             </TiltCard>
           </motion.div>
