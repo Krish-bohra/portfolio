@@ -355,41 +355,43 @@ export default function Overlay() {
         ══════════════════════════════════════════════════════ */}
         <motion.div
           style={{ opacity: opacity3, y: y3, filter: blur3 }}
-          className="sticky top-0 flex min-h-[100dvh] w-full items-center justify-center lg:justify-end px-4 sm:px-[10vw]"
+          className="sticky top-0 flex min-h-[100dvh] w-full items-center justify-center"
         >
-          <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-black/20 to-transparent pointer-events-none" />
+          {/* subtle center radial glow, no solid card */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,rgba(147,51,234,0.12),transparent)] pointer-events-none" />
 
-          <motion.div style={{ x: xRightSection3 }} className="w-full lg:w-auto">
-            <TiltCard 
-              className="pointer-events-auto group relative w-full lg:max-w-2xl rounded-[20px] p-6 lg:p-10 border border-white/10 text-center lg:text-right shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden bg-gradient-to-br from-white/[0.07] to-white/[0.01] backdrop-blur-[20px]"
+          <motion.div
+            style={{ x: xRightSection3 }}
+            className="pointer-events-auto relative flex flex-col items-center gap-6 w-full max-w-lg px-4"
+          >
+            {/* Label */}
+            <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-purple-400 flex items-center gap-2">
+              <span className="h-px w-8 bg-gradient-to-r from-transparent to-purple-500" />
+              Technical Arsenal
+              <span className="h-px w-8 bg-gradient-to-l from-transparent to-purple-500" />
+            </p>
+
+            {/* Heading */}
+            <h2 className="text-4xl sm:text-5xl font-black leading-tight tracking-tighter text-white text-center">
+              Core{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">
+                Toolkit.
+              </span>
+            </h2>
+
+            {/* Orbiting Skills — no card behind it */}
+            <div className="relative w-full flex justify-center">
+              <div className="absolute inset-0 bg-gradient-to-b from-purple-600/10 via-transparent to-transparent blur-3xl pointer-events-none scale-150" />
+              <OrbitingSkills />
+            </div>
+
+            {/* CTA */}
+            <RippleButton
+              onClick={scrollToContact}
+              className="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 text-sm font-bold text-white shadow-[0_0_30px_rgba(147,51,234,0.3)] hover:shadow-[0_0_50px_rgba(147,51,234,0.5)] transition-all"
             >
-              {/* Internal glow fx */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 pointer-events-none" />
-              <div className="absolute -inset-x-20 -top-20 h-48 bg-purple-600/20 blur-[120px] opacity-60 pointer-events-none" />
-
-              <div className="relative z-10 w-full">
-                <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.35em] text-purple-400 mb-4 flex items-center justify-center lg:justify-end gap-2">
-                  Technical Arsenal <span className="h-px w-8 bg-gradient-to-l from-purple-500 to-transparent" />
-                </p>
-                <h2 className="text-3xl lg:text-5xl font-black leading-tight tracking-tighter text-white sm:text-6xl text-balance">
-                  Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Toolkit.</span>
-                </h2>
-
-                <div className="mt-8 lg:mt-12 w-full flex justify-center py-10 relative">
-                  <div className="absolute inset-0 bg-gradient-to-t from-purple-500/5 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
-                  <OrbitingSkills />
-                </div>
-
-                <div className="mt-10 flex justify-center lg:justify-end">
-                  <RippleButton 
-                    onClick={scrollToContact}
-                    className="flex items-center gap-3 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-3 lg:px-8 lg:py-4 text-xs lg:text-sm font-bold text-white shadow-[0_0_30px_rgba(147,51,234,0.3)] hover:shadow-[0_0_50px_rgba(147,51,234,0.5)] transition-all"
-                  >
-                    Start a Project <Mail className="w-4 h-4" />
-                  </RippleButton>
-                </div>
-              </div>
-            </TiltCard>
+              Start a Project <Mail className="w-4 h-4" />
+            </RippleButton>
           </motion.div>
         </motion.div>
 
