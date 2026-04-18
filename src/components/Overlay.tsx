@@ -215,9 +215,9 @@ export default function Overlay() {
               initial={{ opacity: 0, y: 50, filter: "blur(12px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="text-[12vw] xs:text-5xl sm:text-7xl font-black tracking-tighter text-white md:text-9xl lg:text-[12rem] leading-[0.85] select-none break-words w-full max-w-[100vw] overflow-hidden"
+              className="text-[14vw] xs:text-6xl sm:text-7xl font-black tracking-tighter text-white md:text-9xl lg:text-[12rem] leading-[0.85] select-none text-balance"
             >
-              KRISH<br className="sm:hidden" /><br className="hidden sm:block" />BOHRA<span className="text-blue-500">.</span>
+              KRISH<br />BOHRA<span className="text-blue-500">.</span>
             </motion.h1>
 
             {/* Subtitle */}
