@@ -172,7 +172,7 @@ export default function ScrollyCanvas() {
 
   return (
     <div ref={containerRef} className="h-full w-full">
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#121212]">
+      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-[#121212]">
         
         {/* Loading Overlay */}
         {isLoading && !isFirstFrameLoaded && (

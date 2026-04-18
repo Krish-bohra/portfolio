@@ -20,10 +20,14 @@ export default function Home() {
       <Certificates />
 
       {/* Projects Grid below the scrolly animation */}
-      <Projects />
+      <div className="relative z-20">
+        <Projects />
+      </div>
 
       {/* Contact Section */}
-      <Contact />
+      <div className="relative z-30">
+        <Contact />
+      </div>
     </main>
   );
 }
