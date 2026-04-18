@@ -6,7 +6,7 @@ import Contact from "@/components/Contact";
 
 export default function Home() {
   return (
-    <main className="bg-[#121212] overflow-x-hidden w-full flex flex-col relative">
+    <main className="bg-[#121212] w-full flex flex-col relative clip-path-bounds">
       {/* 
         This section is relative so the absolutely-positioned Overlay 
         sits perfectly on top of the ScrollyCanvas.
