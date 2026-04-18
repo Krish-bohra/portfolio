@@ -189,7 +189,7 @@ export default function ScrollyCanvas() {
 
         {/* LCP Optimization: Server-rendered static first frame */}
         <motion.div 
-          className="absolute inset-0 pointer-events-none z-10"
+          className="absolute inset-0 pointer-events-none z-[1]"
           style={{ 
             opacity: isFirstFrameLoaded ? 0 : 1, 
             transition: "opacity 1s ease",
@@ -217,13 +217,13 @@ export default function ScrollyCanvas() {
             filter: isMobile ? "none" : "contrast(1.05) brightness(0.95)",
             transformOrigin: "center center"
           }}
-          className="absolute inset-0 h-full w-full pointer-events-none z-20"
+          className="absolute inset-0 h-full w-full pointer-events-none z-[2]"
         />
 
         {/* Animated gradient color shift overlay (light flicker) */}
         <motion.div
           style={{ opacity: overlayOpacity }}
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none z-[3]"
           animate={{
             background: [
               "radial-gradient(ellipse at 30% 40%, rgba(37,99,235,0.18) 0%, transparent 60%)",
@@ -237,7 +237,7 @@ export default function ScrollyCanvas() {
 
         {/* Subtle vignette for depth */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none z-[4]"
           style={{
             background:
               "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%)",
@@ -245,7 +245,7 @@ export default function ScrollyCanvas() {
         />
 
         {/* Bottom fade-to-bg so the Projects section blends in */}
-        <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none bg-gradient-to-t from-[#121212] to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none bg-gradient-to-t from-[#121212] to-transparent z-[5]" />
       </div>
     </div>
   );
