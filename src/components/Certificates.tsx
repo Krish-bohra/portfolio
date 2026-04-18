@@ -86,13 +86,14 @@ export default function Certificates() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${isMobile ? certificates.length * 600 : certificates.length * 1000}`, // Shorter on mobile
-        scrub: 1,
+        end: `+=${isMobile ? certificates.length * 500 : certificates.length * 1000}`, 
+        scrub: isMobile ? 0.1 : 1, // 0.1 for instant response on mobile
         pin: true,
         pinSpacing: true,
-        pinType: isMobile ? "transform" : "fixed", // Often better on mobile browsers
+        pinType: isMobile ? "transform" : "fixed",
         anticipatePin: 1,
-        snap: {
+        // Disable snap on mobile if it feels unresponsive, or use lighter settings
+        snap: isMobile ? undefined : {
           snapTo: 1 / (certificates.length),
           duration: { min: 0.2, max: 0.5 },
           delay: 0.1,
@@ -192,7 +193,7 @@ export default function Certificates() {
               ref={(el) => {
                 cardsRef.current[index] = el;
               }}
-              className="absolute flex w-[92vw] max-w-4xl flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 backdrop-blur-md pointer-events-auto min-h-[65vh] md:h-[60vh] md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] [transform-style:preserve-3d]"
+              className="absolute flex w-[92vw] max-w-4xl flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-black/60 md:bg-black/40 md:backdrop-blur-md pointer-events-auto min-h-[65vh] md:h-[60vh] md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] [transform-style:preserve-3d]"
             >
               {/* Background Glow */}
               <div

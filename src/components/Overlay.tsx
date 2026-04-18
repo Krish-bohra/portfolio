@@ -291,7 +291,7 @@ export default function Overlay() {
           {/* ── Left Bio Card ── */}
           <motion.div style={{ opacity: opacityBio, x: xLeft }} className="w-full lg:w-auto mt-16 md:mt-0">
             <TiltCard className="pointer-events-auto group relative flex-1 w-full lg:max-w-md rounded-[2.5rem] p-6 lg:p-10 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden"
-              style={{ background: "rgba(14, 22, 50, 0.45)", backdropFilter: "blur(30px)" } as React.CSSProperties}
+              style={{ background: isMobile ? "rgba(10, 15, 30, 0.95)" : "rgba(14, 22, 50, 0.45)", backdropFilter: isMobile ? "none" : "blur(30px)" } as React.CSSProperties}
             >
               <div className="absolute -inset-x-20 -top-20 h-48 bg-blue-600/15 blur-[120px] opacity-60" />
               <div className="relative z-10">
@@ -322,7 +322,7 @@ export default function Overlay() {
           {/* ── Right Education Card ── */}
           <motion.div style={{ opacity: opacityEdu, x: xRight }} className="block w-full lg:w-auto">
             <TiltCard className="pointer-events-auto group relative flex-1 w-full lg:max-w-lg rounded-[2.5rem] p-6 lg:p-10 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.5)] overflow-hidden"
-              style={{ background: "rgba(14, 22, 50, 0.35)", backdropFilter: "blur(20px)" } as React.CSSProperties}
+              style={{ background: isMobile ? "rgba(10, 15, 30, 0.95)" : "rgba(14, 22, 50, 0.35)", backdropFilter: isMobile ? "none" : "blur(20px)" } as React.CSSProperties}
             >
               <div className="relative z-10">
                 <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.35em] text-blue-400 mb-5 flex items-center gap-2">
@@ -360,7 +360,7 @@ export default function Overlay() {
 
           <motion.div style={{ x: xRightSection3 }} className="w-full lg:w-auto">
             <TiltCard className="pointer-events-auto group relative w-full lg:max-w-2xl rounded-[2.5rem] p-8 lg:p-12 border border-white/10 text-center lg:text-right shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden"
-              style={{ background: "rgba(20, 14, 40, 0.45)", backdropFilter: "blur(30px)" } as React.CSSProperties}
+              style={{ background: isMobile ? "rgba(10, 15, 30, 0.95)" : "rgba(20, 14, 40, 0.45)", backdropFilter: isMobile ? "none" : "blur(30px)" } as React.CSSProperties}
             >
               <div className="relative z-10">
                 <p className="text-[10px] lg:text-xs font-bold uppercase tracking-[0.35em] text-purple-400 mb-5 flex items-center justify-center lg:justify-end gap-2">
