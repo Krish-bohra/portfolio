@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from "framer-motion";
 import { ArrowRight, Download, Mail, Headphones, ExternalLink } from "lucide-react";
 import { useRef, useState, useCallback, useEffect } from "react";
+import OrbitingSkills from "@/components/ui/orbiting-skills";
 
 // ─── 3D Tilt Card ──────────────────────────────────────────────────────────────
 function TiltCard({ children, className, style }: { children: React.ReactNode; className: string; style?: React.CSSProperties }) {
@@ -374,25 +375,9 @@ export default function Overlay() {
                   Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Toolkit.</span>
                 </h2>
 
-                <div className="mt-8 lg:mt-12 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 w-full">
-                  {[
-                    { name: 'HTML', color: 'from-orange-500/20 to-orange-500/5', border: 'border-orange-500/20', text: 'text-orange-300' },
-                    { name: 'CSS', color: 'from-blue-500/20 to-blue-500/5', border: 'border-blue-500/20', text: 'text-blue-300' },
-                    { name: 'JavaScript', color: 'from-yellow-400/20 to-yellow-400/5', border: 'border-yellow-400/20', text: 'text-yellow-300' },
-                    { name: 'PHP', color: 'from-indigo-500/20 to-indigo-500/5', border: 'border-indigo-500/20', text: 'text-indigo-300' },
-                    { name: 'MongoDB', color: 'from-emerald-500/20 to-emerald-500/5', border: 'border-emerald-500/20', text: 'text-emerald-300' },
-                    { name: 'WordPress', color: 'from-cyan-500/20 to-cyan-500/5', border: 'border-cyan-500/20', text: 'text-cyan-300' },
-                  ].map((skill) => (
-                    <div 
-                      key={skill.name} 
-                      className={`group/skill relative overflow-hidden flex flex-col items-center justify-center p-4 rounded-[15px] bg-gradient-to-br from-white/[0.05] to-transparent border ${skill.border} shadow-[0_4px_24px_rgba(0,0,0,0.2)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)]`}
-                    >
-                      <div className={`absolute inset-0 bg-gradient-to-b ${skill.color} opacity-0 group-hover/skill:opacity-100 transition-opacity duration-300`} />
-                      <span className={`relative z-10 text-[11px] lg:text-sm font-bold tracking-wider uppercase ${skill.text} drop-shadow-md`}>
-                        {skill.name}
-                      </span>
-                    </div>
-                  ))}
+                <div className="mt-8 lg:mt-12 w-full flex justify-center py-10 relative">
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-500/5 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
+                  <OrbitingSkills />
                 </div>
 
                 <div className="mt-10 flex justify-center lg:justify-end">
