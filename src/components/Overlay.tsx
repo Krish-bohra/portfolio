@@ -284,13 +284,13 @@ export default function Overlay() {
         ══════════════════════════════════════════════════════ */}
         <motion.div
           style={{ opacity: opacity2, y: y2, filter: blur2, scale: scaleCards }}
-          className="sticky top-0 flex flex-col lg:flex-row min-h-[100dvh] w-full items-center justify-center lg:justify-between px-4 sm:px-12 md:px-24 gap-4 lg:gap-8 overflow-hidden"
+          className="sticky top-0 flex flex-col lg:flex-row min-h-[100dvh] w-full items-center justify-center lg:justify-between px-4 sm:px-12 md:px-24 gap-3 lg:gap-8 py-20 lg:py-0"
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/20 to-transparent pointer-events-none" />
 
           {/* ── Left Bio Card ── */}
-          <motion.div style={{ opacity: opacityBio, x: xLeft }} className="w-full lg:w-auto mt-16 md:mt-0">
-            <TiltCard className="pointer-events-auto group relative flex-1 w-full lg:max-w-md rounded-[2.5rem] p-6 lg:p-10 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)] overflow-hidden"
+          <motion.div style={{ opacity: opacityBio, x: xLeft }} className="w-full lg:w-auto">
+            <TiltCard className="pointer-events-auto group relative flex-1 w-full lg:max-w-md rounded-[2.5rem] p-5 lg:p-10 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)]"
               style={{ background: isMobile ? "rgba(10, 15, 30, 0.95)" : "rgba(14, 22, 50, 0.45)", backdropFilter: isMobile ? "none" : "blur(30px)" } as React.CSSProperties}
             >
               <div className="absolute -inset-x-20 -top-20 h-48 bg-blue-600/15 blur-[120px] opacity-60" />
@@ -307,12 +307,12 @@ export default function Overlay() {
                   Specializing in <Keyword>WordPress</Keyword> ecosystems and full-stack architecture.
                   Bridging the gap between <Keyword>JavaScript</Keyword> and scalable <Keyword>.NET</Keyword> / <Keyword>PHP</Keyword> backends.
                 </p>
-                <div className="mt-6 lg:mt-10 flex flex-wrap gap-4">
+                <div className="mt-4 lg:mt-10 flex flex-wrap gap-4">
                   <RippleButton 
                     onClick={scrollToProjects}
-                    className="flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-black"
+                    className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 lg:px-6 lg:py-3 text-[11px] lg:text-sm font-bold text-black"
                   >
-                    View Projects <ArrowRight className="w-4 h-4" />
+                    View Projects <ArrowRight className="w-3 h-3 lg:w-4 lg:h-4" />
                   </RippleButton>
                 </div>
               </div>
@@ -321,7 +321,7 @@ export default function Overlay() {
 
           {/* ── Right Education Card ── */}
           <motion.div style={{ opacity: opacityEdu, x: xRight }} className="block w-full lg:w-auto">
-            <TiltCard className="pointer-events-auto group relative flex-1 w-full lg:max-w-lg rounded-[2.5rem] p-6 lg:p-10 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.5)] overflow-hidden"
+            <TiltCard className="pointer-events-auto group relative flex-1 w-full lg:max-w-lg rounded-[2.5rem] p-5 lg:p-10 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.5)] mt-2 lg:mt-0"
               style={{ background: isMobile ? "rgba(10, 15, 30, 0.95)" : "rgba(14, 22, 50, 0.35)", backdropFilter: isMobile ? "none" : "blur(20px)" } as React.CSSProperties}
             >
               <div className="relative z-10">
