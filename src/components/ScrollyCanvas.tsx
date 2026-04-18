@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent, useSpring } from "framer-motion";
+import NextImage from "next/image";
 
 export default function ScrollyCanvas() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -174,24 +175,49 @@ export default function ScrollyCanvas() {
     <div ref={containerRef} className="h-full w-full">
       <div className="sticky top-0 h-[100dvh] w-full overflow-hidden bg-[#121212]">
         
-        {/* Loading Overlay */}
-        {isLoading && !isFirstFrameLoaded && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-[#121212]">
-            <div className="flex flex-col items-center gap-4">
-              <div className="h-10 w-10 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
-              <p className="text-xs font-bold tracking-[0.3em] text-blue-400 uppercase">Loading Experience</p>
-            </div>
+        {/* Loading Overlay (fades out instead of unmounting) */}
+        <div 
+          className={`absolute inset-0 z-40 flex items-center justify-center bg-[#121212]/30 backdrop-blur-md pointer-events-none transition-all duration-1000 ${
+            isLoading && !isFirstFrameLoaded ? "opacity-100" : "opacity-0 invisible"
+          }`}
+        >
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-blue-500 border-t-transparent shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+            <p className="text-[10px] sm:text-xs font-bold tracking-[0.3em] text-blue-400 uppercase drop-shadow-lg">Loading Experience</p>
           </div>
-        )}
+        </div>
+
+        {/* LCP Optimization: Server-rendered static first frame */}
+        <motion.div 
+          className="absolute inset-0 pointer-events-none z-10"
+          style={{ 
+            opacity: isFirstFrameLoaded ? 0 : 1, 
+            transition: "opacity 1s ease",
+            scale,
+            filter: isMobile ? "none" : "contrast(1.05) brightness(0.95)",
+            transformOrigin: "center center"
+          }}
+        >
+          <NextImage 
+            src="/sequence/ezgif-frame-001.png" 
+            alt="Cinematic background" 
+            fill 
+            className="object-cover" 
+            priority
+            quality={60}
+            unoptimized
+          />
+        </motion.div>
 
         {/* Canvas with scroll-linked zoom */}
         <motion.canvas
           ref={canvasRef}
           style={{ 
             scale,
-            filter: isMobile ? "none" : "contrast(1.05) brightness(0.95)"
+            filter: isMobile ? "none" : "contrast(1.05) brightness(0.95)",
+            transformOrigin: "center center"
           }}
-          className="h-full w-full pointer-events-none"
+          className="absolute inset-0 h-full w-full pointer-events-none z-20"
         />
 
         {/* Animated gradient color shift overlay (light flicker) */}
