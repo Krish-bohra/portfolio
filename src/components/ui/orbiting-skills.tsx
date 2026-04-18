@@ -300,22 +300,35 @@ export default function OrbitingSkills() {
         </div>
 
         {/* Render glowing orbit paths */}
-        {orbitConfigs.map((config) => (
-          <GlowingOrbitPath
-            key={`path-${config.radius}`}
-            radius={config.radius}
-            glowColor={config.glowColor}
-            animationDelay={config.delay}
-          />
-        ))}
+        {orbitConfigs.map((config) => {
+          // Cyclone effect: dynamically pulsating radius
+          const pullFactor = 0.45 + 0.55 * Math.sin(time * 1.5 - (config.radius * 0.015));
+          const dynamicRadius = config.radius * pullFactor;
+          return (
+            <GlowingOrbitPath
+              key={`path-${config.radius}`}
+              radius={dynamicRadius}
+              glowColor={config.glowColor}
+              animationDelay={config.delay}
+            />
+          );
+        })}
 
         {/* Render orbiting skill icons */}
         {skillsConfig.map((config) => {
-          const angle = time * config.speed + (config.phaseShift || 0);
+          // Cyclone effect on the angle and radius
+          // We add a little spiraling rotation boost when pulling in for the cyclone effect
+          const pullFactor = 0.45 + 0.55 * Math.sin(time * 1.5 - (config.orbitRadius * 0.015));
+          const dynamicRadius = config.orbitRadius * pullFactor;
+          
+          // Extra cyclone twist when pulling in
+          const twist = (1 - pullFactor) * 2; 
+          const angle = time * config.speed + (config.phaseShift || 0) + twist;
+          
           return (
             <OrbitingSkill
               key={config.id}
-              config={config}
+              config={{ ...config, orbitRadius: dynamicRadius }}
               angle={angle}
             />
           );
