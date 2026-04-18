@@ -68,6 +68,9 @@ export default function Certificates() {
 
   useGSAP(() => {
     if (!containerRef.current) return;
+    
+    // Evaluate inside useGSAP so it doesn't need to be in dependencies array
+    const isMobileBreakpoint = window.innerWidth < 1024;
 
     // Reset states for all cards first
     cardsRef.current.forEach((card, i) => {
@@ -86,14 +89,14 @@ export default function Certificates() {
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: `+=${isMobile ? certificates.length * 500 : certificates.length * 1000}`, 
-        scrub: isMobile ? 0.1 : 1, // 0.1 for instant response on mobile
+        end: `+=${isMobileBreakpoint ? certificates.length * 500 : certificates.length * 1000}`, 
+        scrub: isMobileBreakpoint ? 0.5 : 1, // 0.5 for smoother drag on mobile
         pin: true,
         pinSpacing: true,
-        pinType: isMobile ? "transform" : "fixed",
+        // Let GSAP handle pinType automatically for best cross-device support
         anticipatePin: 1,
-        // Disable snap on mobile if it feels unresponsive, or use lighter settings
-        snap: isMobile ? undefined : {
+        // Disable snap on mobile if it feels unresponsive
+        snap: isMobileBreakpoint ? undefined : {
           snapTo: 1 / (certificates.length),
           duration: { min: 0.2, max: 0.5 },
           delay: 0.1,
@@ -105,9 +108,11 @@ export default function Certificates() {
             Math.floor(progress * (certificates.length)),
             certificates.length - 1
           );
-          if (newIndex !== currentIndex) {
-            setCurrentIndex(newIndex);
-          }
+          // Use functional state update to prevent closure staleness
+          setCurrentIndex((prev) => {
+             if (prev !== newIndex) return newIndex;
+             return prev;
+          });
         }
       },
     });
@@ -125,7 +130,7 @@ export default function Certificates() {
           xPercent: -100,
           opacity: 0,
           scale: 0.9,
-          filter: "blur(10px)",
+          filter: isMobileBreakpoint ? "none" : "blur(10px)",
           duration: 1,
           ease: "power2.inOut"
         });
@@ -134,7 +139,7 @@ export default function Certificates() {
           xPercent: 0,
           opacity: 1,
           scale: 1,
-          filter: "blur(0px)",
+          filter: isMobileBreakpoint ? "none" : "blur(0px)",
           duration: 1,
           ease: "power2.inOut"
         }, "<"); // Start simultaneously
@@ -145,11 +150,10 @@ export default function Certificates() {
     tl.to({}, { duration: 0.5 });
 
     return () => {
-      // Unregister only this timeline's scrollTrigger
       if (tl.scrollTrigger) tl.scrollTrigger.kill();
       tl.kill();
     };
-  }, { scope: containerRef, dependencies: [isMobile] });
+  }, { scope: containerRef, dependencies: [] }); // Empty dependencies prevents timeline recreation bugs
 
   return (
     <>

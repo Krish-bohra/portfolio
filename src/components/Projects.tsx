@@ -226,7 +226,7 @@ export default function Projects() {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
   return (
-    <section id="projects" className="relative z-20 bg-[#121212] px-6 py-32 sm:px-12 md:px-24">
+    <section id="projects" className="relative z-20 bg-[#121212] px-6 py-16 sm:py-32 sm:px-12 md:px-24">
       {/* Subtle top border gradient */}
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
@@ -241,7 +241,7 @@ export default function Projects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row sm:items-end justify-between mb-20 gap-8"
+          className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 sm:mb-20 gap-8"
         >
           <div>
             <motion.p
