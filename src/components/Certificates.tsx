@@ -197,7 +197,7 @@ export default function Certificates() {
               ref={(el) => {
                 cardsRef.current[index] = el;
               }}
-              className="absolute flex w-[92vw] max-w-4xl flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-black/60 md:bg-black/40 md:backdrop-blur-md pointer-events-auto min-h-[65vh] md:h-[60vh] md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] [transform-style:preserve-3d]"
+              className="absolute flex w-[90vw] md:w-[85vw] max-w-4xl flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-black/60 md:bg-black/40 md:backdrop-blur-md pointer-events-auto max-h-[85vh] sm:min-h-[60vh] md:h-[60vh] md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] [transform-style:preserve-3d]"
             >
               {/* Background Glow */}
               <div
@@ -206,7 +206,7 @@ export default function Certificates() {
 
               {/* Left side: Image / Visual */}
               <div 
-                className="group relative h-48 w-full cursor-pointer overflow-hidden bg-white/5 md:h-full md:w-1/2"
+                className="group relative h-32 sm:h-48 w-full shrink-0 cursor-pointer overflow-hidden bg-white/5 md:h-full md:w-1/2"
                 onClick={() => setSelectedCert(cert)}
               >
                 <Image
@@ -227,10 +227,10 @@ export default function Certificates() {
               </div>
 
               {/* Right side: Details */}
-              <div className="relative z-10 flex flex-1 flex-col justify-center p-6 md:p-12">
-                <div className="mb-4 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-inner backdrop-blur-md">
+              <div className="relative z-10 flex flex-1 flex-col justify-center p-5 sm:p-8 md:p-12 overflow-y-auto no-scrollbar">
+                <div className="mb-3 flex h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-inner backdrop-blur-md">
                   {/* Scale icon for mobile */}
-                  <div className="scale-75 md:scale-100">
+                  <div className="scale-50 sm:scale-75 md:scale-100">
                     {cert.icon}
                   </div>
                 </div>
@@ -241,11 +241,11 @@ export default function Certificates() {
                   </span>
                 </div>
 
-                <h3 className="mb-2 text-xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl">
+                <h3 className="mb-2 text-lg sm:text-xl font-bold tracking-tight text-white md:text-3xl lg:text-4xl text-balance">
                   {cert.title}
                 </h3>
 
-                <p className="mb-6 text-sm md:text-lg text-white/50">
+                <p className="mb-4 text-xs sm:text-sm md:text-lg text-white/50">
                   Issued by <span className="text-white/80">{cert.issuer}</span>
                 </p>
 

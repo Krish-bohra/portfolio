@@ -215,7 +215,7 @@ export default function Overlay() {
               initial={{ opacity: 0, y: 50, filter: "blur(12px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              className="text-4xl xs:text-5xl sm:text-7xl font-black tracking-tighter text-white md:text-9xl lg:text-[12rem] leading-[0.85] select-none break-words"
+              className="text-[12vw] xs:text-5xl sm:text-7xl font-black tracking-tighter text-white md:text-9xl lg:text-[12rem] leading-[0.85] select-none break-words w-full max-w-[100vw] overflow-hidden"
             >
               KRISH<br className="sm:hidden" /> {isMobile ? "" : <br />}BOHRA<span className="text-blue-500">.</span>
             </motion.h1>
@@ -238,7 +238,7 @@ export default function Overlay() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
-              className="pointer-events-auto flex items-center gap-4"
+              className="pointer-events-auto flex flex-col xs:flex-row items-center gap-4 w-full justify-center px-4"
             >
               <RippleButton 
                 onClick={scrollToProjects}
