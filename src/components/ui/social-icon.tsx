@@ -1,74 +1,51 @@
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Github, Linkedin, Instagram, Twitter } from "lucide-react";
 
 const ButtonSocialIconDemo = () => {
   return (
     <div className="flex items-center justify-center gap-4 flex-wrap">
-      {/* discord */}
+      {/* Twitter */}
       <Button
         variant="outline"
         type="button"
-        className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer"
+        className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer p-2"
+        onClick={() => window.open('https://twitter.com', '_blank')}
       >
-        <Image
-          src="https://images.shadcnspace.com/assets/svgs/icon-discord.svg"
-          alt="discord icon"
-          width={16}
-          height={16}
-          className="h-4 w-4"
-        />
+        <Twitter className="h-4 w-4" />
       </Button>
-      {/* github */}
+
+      {/* Github */}
       <Button
         variant="outline"
         type="button"
-        className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer"
+        className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer p-2"
+        onClick={() => window.open('https://github.com/Krish-bohra', '_blank')}
       >
-        <Image
-          src="https://images.shadcnspace.com/assets/svgs/icon-github.svg"
-          alt="github icon"
-          width={16}
-          height={16}
-          className="dark:hidden h-4 w-4"
-        />
-        <Image
-          src="https://images.shadcnspace.com/assets/svgs/icon-github-white.svg"
-          alt="github icon"
-          width={16}
-          height={16}
-          className="hidden dark:block h-4 w-4"
-        />
+        <Github className="h-4 w-4" />
       </Button>
-      {/* linkedin */}
+
+      {/* Linkedin */}
       <Button
         variant="outline"
         type="button"
-        className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer"
+        className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer p-2"
+        onClick={() => window.open('https://linkedin.com', '_blank')}
       >
-        <Image
-          src="https://images.shadcnspace.com/assets/svgs/icon-linkedin.svg"
-          alt="linkedin icon"
-          width={16}
-          height={16}
-          className="h-4 w-4"
-        />
+        <Linkedin className="h-4 w-4 text-blue-500" />
       </Button>
-      {/* instagram */}
+
+      {/* Instagram */}
       <Button
         variant="outline"
         type="button"
-        className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer"
+        className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer p-2"
+        onClick={() => window.open('https://instagram.com', '_blank')}
       >
-        <Image
-          src="https://images.shadcnspace.com/assets/svgs/icon-instagram.svg"
-          alt="instagram icon"
-          width={16}
-          height={16}
-          className="h-4 w-4"
-        />
+        <Instagram className="h-4 w-4 text-pink-500" />
       </Button>
     </div>
   );
 };
 
 export default ButtonSocialIconDemo;
+
