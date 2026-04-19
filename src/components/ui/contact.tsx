@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { motion } from 'framer-motion';
+import ButtonSocialIconDemo from '@/components/ui/social-icon';
 
 interface ContactSectionProps {
   /**
@@ -44,17 +45,13 @@ interface ContactSectionProps {
   isSubmitting?: boolean;
 }
 
-const defaultSocialLinks = [
-  { id: '1', name: 'X', iconSrc: 'https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/x.svg', href: '#x' },
-  { id: '2', name: 'Instagram', iconSrc: 'https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/instagram.svg', href: '#instagram' },
-  { id: '3', name: 'LinkedIn', iconSrc: 'https://cdn.jsdelivr.net/npm/simple-icons@v5/icons/linkedin.svg', href: '#linkedin' },
-];
+
 
 export const ContactSection: React.FC<ContactSectionProps> = ({
   title = "We can turn your dream project into reality",
   mainMessage = "Let's talk! 👋",
   contactEmail = "hello@pixelperfect.com",
-  socialLinks = defaultSocialLinks,
+  socialLinks = [],
   backgroundImageSrc = "https://images.unsplash.com/photo-1742273330004-ef9c9d228530?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHx0b3BpYy1mZWVkfDY0fENEd3V3WEpBYkV3fHxlbnwwfHx8fHw%3D&auto=format&fit=crop&q=60&w=900",
   onSubmit,
   errorMessage,
@@ -158,6 +155,15 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
               Specializing in high-performance digital solutions. 
               Drop us a line and let&apos;s turn your vision into reality.
             </p>
+
+            {/* Social Icon Buttons */}
+            <div className="mt-8">
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-blue-400 mb-4 flex items-center gap-2">
+                <span className="h-px w-8 bg-gradient-to-r from-blue-500 to-transparent" />
+                Find me on
+              </p>
+              <ButtonSocialIconDemo />
+            </div>
           </div>
 
           {/* Right Side: Contact Form */}

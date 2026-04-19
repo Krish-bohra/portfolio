@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Dancing_Script } from 'next/font/google'
 import './globals.css'
 import SmoothScroll from '@/components/SmoothScroll'
 
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const dancing = Dancing_Script({ subsets: ['latin'], variable: '--font-dancing', weight: ['700'] })
 
 export const metadata: Metadata = {
   title: 'Portfolio | Creative Developer',
@@ -26,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark bg-[#121212] text-white">
-      <body className={`${inter.className} min-h-screen bg-[#121212] text-white antialiased selection:bg-white/30 overflow-x-hidden w-full relative`}>
+      <body className={`${inter.variable} ${dancing.variable} ${inter.className} min-h-screen bg-[#121212] text-white antialiased selection:bg-white/30 overflow-x-hidden w-full relative`}>
         <SmoothScroll>
           {children}
         </SmoothScroll>

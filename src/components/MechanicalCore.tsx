@@ -424,7 +424,7 @@ export default function MechanicalCore({ onEnter, visible = true }: MechanicalCo
             <text
               x={CX} y={CY + 7}
               textAnchor="middle"
-              fontFamily="'Dancing Script', 'Brush Script MT', cursive"
+              fontFamily="var(--font-dancing), 'Dancing Script', cursive"
               fontSize="22"
               fontWeight="700"
               fill="#ff6a50"
