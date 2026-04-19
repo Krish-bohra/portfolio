@@ -273,8 +273,8 @@ export default function Overlay() {
 
                     {/* Resume download button */}
                     <a
-                      href="/resume-preview.png"
-                      download="Krish_Bohra_Resume.png"
+                      href="/Krish_Bohra_Resume.pdf"
+                      download="Krish_Bohra_Resume.pdf"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 lg:px-6 lg:py-3 text-[11px] lg:text-sm font-bold text-black hover:bg-white/90 transition-colors duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
