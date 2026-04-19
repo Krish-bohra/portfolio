@@ -196,20 +196,6 @@ export default function Overlay() {
             style={{ rotate: heroRotate }}
             className="relative text-center"
           >
-            {/* Badge */}
-            <motion.div
-              style={{ y: heroBadgeY }}
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur-md"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500" />
-              </span>
-              <span className="text-xs font-medium tracking-widest text-blue-200/80 uppercase">Available for projects</span>
-            </motion.div>
 
             {/* Headline */}
             <motion.h1
@@ -234,53 +220,6 @@ export default function Overlay() {
             </motion.p>
           </motion.div>
 
-          {/* CTA buttons */}
-          <div className="mt-16 flex flex-col items-center gap-12">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.8 }}
-              className="pointer-events-auto flex flex-col xs:flex-row items-center gap-4 w-full justify-center px-4"
-            >
-
-              <a
-                href="/resume-preview.png"
-                download="Krish_Bohra_Resume.png"
-                className="flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-bold text-black hover:bg-white/90 shadow-[0_0_24px_rgba(255,255,255,0.15)] hover:shadow-[0_0_36px_rgba(255,255,255,0.3)] transition-all duration-300"
-              >
-                Resume <Download className="w-4 h-4" />
-              </a>
-              <RippleButton 
-                onClick={scrollToContact}
-                className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-bold text-white backdrop-blur-md hover:border-white/30 hover:bg-white/10 transition-colors duration-300"
-              >
-                Contact Me <Mail className="w-4 h-4" />
-              </RippleButton>
-            </motion.div>
-
-            {/* Now Playing */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2, duration: 1 }}
-              className="flex items-center gap-4 border border-white/5 bg-black/25 px-6 py-3 backdrop-blur-xl rounded-2xl"
-            >
-              <div className="flex gap-1.5 items-end h-5">
-                {[0.4, 0.7, 0.3, 0.9, 0.5, 0.8].map((h, i) => (
-                  <motion.div
-                    key={i}
-                    animate={{ height: ["20%", "100%", "20%"] }}
-                    transition={{ duration: 0.5 + i * 0.1, repeat: Infinity, ease: "easeInOut" }}
-                    className="w-1.5 bg-blue-500/60 rounded-full"
-                    style={{ height: `${h * 100}%` }}
-                  />
-                ))}
-              </div>
-              <p className="text-[10px] sm:text-xs font-semibold tracking-wider text-white/50 flex items-center gap-2 uppercase">
-                <Headphones className="w-3.5 h-3.5 text-blue-400" /> Currently crafting to Lofi Beats
-              </p>
-            </motion.div>
-          </div>
         </motion.div>
 
         {/* ══════════════════════════════════════════════════════

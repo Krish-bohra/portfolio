@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Inter, Dancing_Script } from 'next/font/google'
 import './globals.css'
 import SmoothScroll from '@/components/SmoothScroll'
-import FloatingChat from '@/components/FloatingChat'
 
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -32,7 +31,6 @@ export default function RootLayout({
         <SmoothScroll>
           {children}
         </SmoothScroll>
-        <FloatingChat />
         <SpeedInsights />
       </body>
     </html>
