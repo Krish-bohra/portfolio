@@ -253,8 +253,8 @@ export default function Overlay() {
                 <div className="mt-4 lg:mt-6 flex flex-wrap gap-3">
                   {/* Resume button with hover preview */}
                   <div className="group/resume relative">
-                    {/* Floating preview popup */}
-                    <div className="absolute bottom-full left-0 mb-3 w-40 lg:w-52 opacity-0 scale-95 group-hover/resume:opacity-100 group-hover/resume:scale-100 transition-all duration-300 ease-out pointer-events-none z-50 origin-bottom-left">
+                    {/* Floating preview popup (Hidden on mobile to prevent iOS double-tap issue) */}
+                    <div className="hidden lg:block absolute bottom-full left-0 mb-3 w-52 opacity-0 scale-95 lg:group-hover/resume:opacity-100 lg:group-hover/resume:scale-100 transition-all duration-300 ease-out pointer-events-none z-50 origin-bottom-left">
                       <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.7)]">
                         <div className="relative w-full aspect-[3/4]">
                           <Image
@@ -262,7 +262,7 @@ export default function Overlay() {
                             alt="Resume Preview"
                             fill
                             className="object-cover"
-                            sizes="(max-width: 768px) 160px, 208px"
+                            sizes="208px"
                           />
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
@@ -275,6 +275,28 @@ export default function Overlay() {
                     <a
                       href="/resume-preview.png"
                       download="Krish_Bohra_Resume.png"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={async (e) => {
+                        // Force programmatic download on mobile devices to bypass browser image view limitations
+                        if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                          e.preventDefault();
+                          try {
+                            const response = await fetch("/resume-preview.png");
+                            const blob = await response.blob();
+                            const url = window.URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.download = "Krish_Bohra_Resume.png";
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            window.URL.revokeObjectURL(url);
+                          } catch (err) {
+                            window.open("/resume-preview.png", "_blank");
+                          }
+                        }
+                      }}
                       className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 lg:px-6 lg:py-3 text-[11px] lg:text-sm font-bold text-black hover:bg-white/90 transition-colors duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
                     >
                       Resume <Download className="w-3 h-3 lg:w-4 lg:h-4" />
