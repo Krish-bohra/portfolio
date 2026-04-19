@@ -277,9 +277,15 @@ export default function Overlay() {
                       download="Krish_Bohra_Resume.pdf"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 lg:px-6 lg:py-3 text-[11px] lg:text-sm font-bold text-black hover:bg-white/90 transition-colors duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                      onClick={(e) => {
+                        // Attempt fallback for iOS if it blocks the native a tag routing in 3D contexts
+                        if (typeof window !== "undefined" && window.innerWidth < 768) {
+                          setTimeout(() => window.open("/Krish_Bohra_Resume.pdf", "_blank"), 100);
+                        }
+                      }}
+                      className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 lg:px-6 lg:py-3 text-[11px] lg:text-sm font-bold text-black hover:bg-white/90 transition-colors duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)] relative z-50 pointer-events-auto touch-auto cursor-pointer"
                     >
-                      Resume <Download className="w-3 h-3 lg:w-4 lg:h-4" />
+                      Resume <Download className="w-3 h-3 lg:w-4 lg:h-4 pointer-events-none" />
                     </a>
                   </div>
                 </div>
