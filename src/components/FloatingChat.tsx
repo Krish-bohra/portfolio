@@ -41,8 +41,8 @@ export default function FloatingChat() {
               </button>
             </div>
             <iframe 
-              src="https://cdn.botpress.cloud/webchat/v3.6/shareable.html?configUrl=https://files.bpcontent.cloud/2026/04/19/08/20260419085408-7QPM1FX4.json"
-              className="flex-1 w-full border-none bg-transparent"
+              src="/chatbot.html"
+              className="flex-1 w-full border-none bg-[#121212]"
               title="AI Chatbot"
             />
           </motion.div>

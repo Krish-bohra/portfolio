@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #121212 !important;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #bp-webchat-container {
+            width: 100% !important;
+            height: 100% !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            max-height: none !important;
+        }
+        .bpWebchat {
+            width: 100% !important;
+            height: 100% !important;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script defer>
+        window.botpress.init({
+            "configUrl": "https://files.bpcontent.cloud/2026/04/19/08/20260419085408-7QPM1FX4.json",
+            "hostUrl": "https://cdn.botpress.cloud/webchat/v2.2",
+            "themeMode": "dark",
+            "hideWidget": true,
+            "disableAnimations": false,
+            "containerWidth": "100%",
+            "layoutWidth": "100%"
+        });
+        window.botpress.on("webchat:ready", function() {
+            window.botpress.open();
+        });
+    </script>
+</body>
+</html>
