@@ -169,6 +169,11 @@ export default function Overlay() {
   // Breathing animation for the canvas zoom (referenced in ScrollyCanvas, kept here for reference)
   const canvasScaleY = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
+  // Fix click-blocking overlaps: disable pointer events when sections are invisible
+  const pEvents1 = useTransform(scrollYProgress, (v) => (v < 0.35 ? "auto" : "none"));
+  const pEvents2 = useTransform(scrollYProgress, (v) => (v > 0.3 && v < 0.72 ? "auto" : "none"));
+  const pEvents3 = useTransform(scrollYProgress, (v) => (v > 0.65 ? "auto" : "none"));
+
   return (
     <>
       {/* ── Noise Texture Overlay ── */}
@@ -232,7 +237,7 @@ export default function Overlay() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/20 to-transparent pointer-events-none" />
 
           {/* ── Left Bio Card ── */}
-          <motion.div style={{ opacity: opacityBio, x: xLeft }} className="w-full lg:w-auto">
+          <motion.div style={{ opacity: opacityBio, x: xLeft, pointerEvents: pEvents2 }} className="w-full lg:w-auto">
             <TiltCard className="pointer-events-auto group relative flex-1 w-full lg:max-w-md rounded-[2.5rem] p-5 lg:p-10 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)]"
               style={{ background: isMobile ? "rgba(10, 15, 30, 0.95)" : "rgba(14, 22, 50, 0.45)", backdropFilter: isMobile ? "none" : "blur(30px)" } as React.CSSProperties}
             >
@@ -295,7 +300,7 @@ export default function Overlay() {
           </motion.div>
 
           {/* ── Right Education Card ── */}
-          <motion.div style={{ opacity: opacityEdu, x: xRight }} className="block w-full lg:w-auto">
+          <motion.div style={{ opacity: opacityEdu, x: xRight, pointerEvents: pEvents2 }} className="block w-full lg:w-auto">
             <TiltCard className="pointer-events-auto group relative flex-1 w-full lg:max-w-lg rounded-[2.5rem] p-5 lg:p-10 border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.5)] mt-2 lg:mt-0"
               style={{ background: isMobile ? "rgba(10, 15, 30, 0.95)" : "rgba(14, 22, 50, 0.35)", backdropFilter: isMobile ? "none" : "blur(20px)" } as React.CSSProperties}
             >
@@ -335,7 +340,7 @@ export default function Overlay() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_50%_50%,rgba(147,51,234,0.12),transparent)] pointer-events-none" />
 
           <motion.div
-            style={{ x: xRightSection3 }}
+            style={{ x: xRightSection3, pointerEvents: pEvents3 }}
             className="pointer-events-auto relative flex flex-col items-center gap-6 w-full max-w-lg px-4"
           >
             {/* Label */}
