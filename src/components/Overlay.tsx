@@ -277,26 +277,6 @@ export default function Overlay() {
                       download="Krish_Bohra_Resume.png"
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={async (e) => {
-                        // Force programmatic download on mobile devices to bypass browser image view limitations
-                        if (typeof window !== 'undefined' && window.innerWidth < 768) {
-                          e.preventDefault();
-                          try {
-                            const response = await fetch("/resume-preview.png");
-                            const blob = await response.blob();
-                            const url = window.URL.createObjectURL(blob);
-                            const link = document.createElement('a');
-                            link.href = url;
-                            link.download = "Krish_Bohra_Resume.png";
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                            window.URL.revokeObjectURL(url);
-                          } catch (err) {
-                            window.open("/resume-preview.png", "_blank");
-                          }
-                        }
-                      }}
                       className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 lg:px-6 lg:py-3 text-[11px] lg:text-sm font-bold text-black hover:bg-white/90 transition-colors duration-300 shadow-[0_0_20px_rgba(255,255,255,0.1)]"
                     >
                       Resume <Download className="w-3 h-3 lg:w-4 lg:h-4" />
