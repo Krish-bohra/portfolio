@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from "framer-motion";
 import { ArrowRight, Download, Mail, Headphones, ExternalLink } from "lucide-react";
 import { useRef, useState, useCallback, useEffect } from "react";
@@ -316,11 +317,15 @@ export default function Overlay() {
                     {/* Floating preview popup */}
                     <div className="absolute bottom-full left-0 mb-3 w-40 lg:w-52 opacity-0 scale-95 group-hover/resume:opacity-100 group-hover/resume:scale-100 transition-all duration-300 ease-out pointer-events-none z-50 origin-bottom-left">
                       <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.7)]">
-                        <img
-                          src="/resume-preview.png"
-                          alt="Resume Preview"
-                          className="w-full h-auto object-cover"
-                        />
+                        <div className="relative w-full aspect-[3/4]">
+                          <Image
+                            src="/resume-preview.png"
+                            alt="Resume Preview"
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 160px, 208px"
+                          />
+                        </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
                       </div>
                       {/* Arrow */}

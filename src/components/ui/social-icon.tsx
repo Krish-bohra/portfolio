@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 const ButtonSocialIconDemo = () => {
@@ -9,9 +10,11 @@ const ButtonSocialIconDemo = () => {
         type="button"
         className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer"
       >
-        <img
+        <Image
           src="https://images.shadcnspace.com/assets/svgs/icon-discord.svg"
           alt="discord icon"
+          width={16}
+          height={16}
           className="h-4 w-4"
         />
       </Button>
@@ -21,14 +24,18 @@ const ButtonSocialIconDemo = () => {
         type="button"
         className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer"
       >
-        <img
+        <Image
           src="https://images.shadcnspace.com/assets/svgs/icon-github.svg"
           alt="github icon"
+          width={16}
+          height={16}
           className="dark:hidden h-4 w-4"
         />
-        <img
+        <Image
           src="https://images.shadcnspace.com/assets/svgs/icon-github-white.svg"
           alt="github icon"
+          width={16}
+          height={16}
           className="hidden dark:block h-4 w-4"
         />
       </Button>
@@ -38,9 +45,11 @@ const ButtonSocialIconDemo = () => {
         type="button"
         className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer"
       >
-        <img
+        <Image
           src="https://images.shadcnspace.com/assets/svgs/icon-linkedin.svg"
           alt="linkedin icon"
+          width={16}
+          height={16}
           className="h-4 w-4"
         />
       </Button>
@@ -50,9 +59,11 @@ const ButtonSocialIconDemo = () => {
         type="button"
         className="rounded-lg hover:scale-120 transition-all duration-300 cursor-pointer"
       >
-        <img
+        <Image
           src="https://images.shadcnspace.com/assets/svgs/icon-instagram.svg"
           alt="instagram icon"
+          width={16}
+          height={16}
           className="h-4 w-4"
         />
       </Button>
