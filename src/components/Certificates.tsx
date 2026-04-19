@@ -318,12 +318,12 @@ export default function Certificates() {
                 </div>
               </div>
 
-              {/* Close button (desktop) */}
+              {/* Close button */}
               <button 
                 onClick={() => setSelectedCert(null)}
-                className="absolute top-6 right-6 hidden md:flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white hover:text-black"
+                className="absolute top-4 right-4 z-[110] flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white hover:text-black sm:top-6 sm:right-6 sm:h-12 sm:w-12"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
             </motion.div>
           </motion.div>

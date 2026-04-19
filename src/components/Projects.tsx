@@ -303,9 +303,9 @@ export default function Projects() {
             >
               <button
                 onClick={() => setSelectedVideo(null)}
-                className="absolute top-6 right-6 z-20 p-3 rounded-full bg-black/40 text-white/70 hover:text-white hover:bg-white/10 transition-all backdrop-blur-md border border-white/10"
+                className="absolute top-4 right-4 z-[110] flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition-all hover:bg-white hover:text-black sm:top-6 sm:right-6 sm:h-12 sm:w-12"
               >
-                <X className="w-6 h-6" />
+                <X className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
               <video
                 src={selectedVideo}
